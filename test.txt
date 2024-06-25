@@ -2,7 +2,11 @@ hello
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 change2
+=======
+change1
+>>>>>>> Stashed changes
 =======
 change1
 >>>>>>> Stashed changes
