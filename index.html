@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Eccomerce</title>
 
     <link rel="stylesheet" href="style.css">
 
@@ -14,24 +14,30 @@
     <div class="login_layout">
 
         <div class="login_img">
-            <img src="./assets/kv-login.jpeg" alt="kv login image">
+            <div class="login_img_container">
+                <img src="./assets/kv-login.jpeg" alt="kv login image">
+            </div>
         </div>
 
         <div class="login_form">
 
-            <img src="" alt="kv_logo">
+            <div class="kv_logo">
+                <img src="./assets/kv-logo.png" alt="kv_logo">
+            </div>
 
             <form action="">
 
                 <div class="form_fields">
-                    <label for="username">Username</label>
-                    <input type="text">
+                    <label for="username" id="user_label" class="label_class">Username</label>
+                    <input type="text" id="inp1" placeholder="Username">
                 </div>
 
                 <div class="form_fields">
-                    <label for="password">Password</label>
-                    <input type="password">
+                    <label for="password" id="password_label" class="label_class">Password</label>
+                    <input type="password" id="inp2" placeholder="Password">
                 </div>
+                <button class="login_btn">Log In</button>   
+
 
             </form>
 
@@ -39,7 +45,7 @@
 
     </div>
 
-
+<script src="script.js"></script>
 </body>
 
 </html>

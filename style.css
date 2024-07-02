@@ -1,4 +1,4 @@
-*{
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -6,25 +6,94 @@
 
 .login_layout {
     display: flex;
-    width: 80%;
-    height: 90vh;
+    width: 90%;
+    height: 100vh;
 }
 
 
 .login_img {
-    background-color: red;
+    /* background-color: #71cff1de; */
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.login_form{
+.login_form {
     width: 100%;
-    background-color: blue;
+    /* background-color: rgb(126, 126, 133);   */
+    /* mari\  */
+    /* margin: 50px 50px 50px 50px; */
+    padding-top: 300px;
+    padding-left: 100px;
+}
+
+form {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    /* flex: 1; */
+}
+
+input {
+    width: 400px;
+    height: 40px;
+    border: 1px solid rgba(61, 61, 61, 0.295);
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.form_fields {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0px 10px 0px;
+
 
 }
+
+/* 
+.kv_logo{
+    border-radius: 50%;
+} */
+
+.login_img_container img {
+    border-radius: 50%;
+}
+
+.kv_logo img {
+    width: 200px;
+}
+
+.login_btn {
+    width: 400px;
+    background-color: #03AEEE;
+    border: 0px;
+    height: 40px;
+    margin-top: 20px;
+    border-radius: 5px;
+
+}
+
+.label_class {
+    opacity: 0;
+    position: absolute;
+    margin-top: 0px;
+}
+
+input[type=text]:focus {
+    border: 3px solid #555;
+}
+
+
+.onfocus_label {
+    opacity: 1;
+    position: absolute;
+    margin-top : -10px;
+    font-size: small;
+    margin-left: 10px;
+    background-color: #ffffff;
+}
+
+
+
+
