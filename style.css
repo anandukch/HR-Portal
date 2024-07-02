@@ -12,20 +12,14 @@
 
 
 .login_img {
-    /* background-color: #71cff1de; */
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin: 70px 0px 0px 70px;
 }
 
 .login_form {
     width: 100%;
-    /* background-color: rgb(126, 126, 133);   */
-    /* mari\  */
-    /* margin: 50px 50px 50px 50px; */
     padding-top: 300px;
-    padding-left: 100px;
+    padding-left: 200px;
 }
 
 form {
@@ -51,13 +45,19 @@ input {
 
 }
 
-/* 
-.kv_logo{
-    border-radius: 50%;
-} */
 
 .login_img_container img {
     border-radius: 50%;
+    width: 500px;
+    height: 500px;
+}
+
+.login_img_container{
+    border-radius: 10px;
+
+    background-color: #bee9f8;
+    padding: 170px;
+
 }
 
 .kv_logo img {
