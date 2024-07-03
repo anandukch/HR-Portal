@@ -5,7 +5,7 @@ const employeeRouter = Router();
 let employees: Employee[] = [
     {
         id: 1,
-        name: "Annadu",
+        name: "Anandu",
         createdAt: new Date(),
         updatedAt: new Date(),
     },
@@ -28,28 +28,38 @@ employeeRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 employeeRouter.put("/:id", (req: Request, res: Response) => {
-    console.log(req.body);
-
-    employees = employees.map((employee) => {
-        if (employee.id == Number(req.params.id)) {
-            return req.body;
+    // employees = employees.map((employee) => {
+    //     if (employee.id == Number(req.params.id)) {
+    //         return { ...employee, ...req.body };
+    //     }
+    //     return employee;
+    // });
+    employees.forEach((e, i) => {
+        if (e.id == Number(req.params.id)) {
+            employees[i] = {
+                ...e,
+                ...req.body,
+            };
         }
-        return employee;
     });
-    res.status(200).send("Updated an employee");
+    res.status(200).send(employees);
 });
 
 employeeRouter.post("/", (req: Request, res: Response) => {
     const body = req.body;
     const newId = employees.length + 1;
-    const employee: Employee = {
-        id: newId,
-        name: body.name,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
-    employees.push(employee);
-    res.status(201).send(employee);
+    // const newEmployee: Employee = {
+    //     id: newId,
+    //     name: body.name,
+    //     createdAt: new Date(),
+    //     updatedAt: new Date(),
+    // };
+
+    const newEmployee = new Employee();
+    newEmployee.id = newId;
+    newEmployee.name=  body.name
+    employees.push(newEmployee);
+    res.status(201).send(newEmployee);
 });
 
 employeeRouter.delete("/:id", (req: Request, res: Response) => {
