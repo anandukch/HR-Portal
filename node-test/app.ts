@@ -1,36 +1,31 @@
 import { Request, Response } from "express";
 
-const express = require("express");
-const server = new express();
-
-interface Profile {
-    name: string;
-    age: number;
-}
-interface Data {
-    profile: Profile;
-}
+import express from "express";
+const server = express();
 
 server.get("/", (req: Request, res: Response) => {
     console.log(req.url);
     res.status(200).send("Hello world");
 });
 
-server.get("/getData", (req: Request, res: Response) => {
-    let data: Data = {
-        profile: {
-            name: "Anandu",
-            age: 22,
-        },
-    };
-    console.log(data.profile.name);
-
-    res.status(200).send(data);
+server.get("/employees", (req: Request, res: Response) => {
+    console.log(req.url);
+    res.status(200).send("Get all employees");
 });
 
-server.get("/name", (req: Request, res: Response) => {
-    res.status(200).send("I am Anandu");
+server.put("/employees/:id", (req: Request, res: Response) => {
+    console.log(req.url);
+    res.status(200).send("Updated an employee");
 });
+
+server.post("/employees", (req, res) => {
+    res.status(201).send("Employee created");
+});
+
+server.delete("/employees/:id", (req, res) => {
+    res.status(200).send("Employee deleted");
+});
+
 server.listen(3000, () => {
     console.log("Server running on port 3000");
 });
