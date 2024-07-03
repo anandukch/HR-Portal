@@ -1,6 +1,23 @@
-export default class Employee {
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
+@Entity()
+class Employee {
+    @PrimaryGeneratedColumn()
     id: number;
+
+    @Column()
     name: string;
+
+    @Column()
+    email: string;
+
+    @CreateDateColumn()
     createdAt: Date = new Date();
+
+    @UpdateDateColumn()
     updatedAt: Date = new Date();
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
+export default Employee;
