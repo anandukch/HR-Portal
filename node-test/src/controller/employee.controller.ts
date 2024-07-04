@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 
 class EmployeeController {
@@ -17,16 +17,22 @@ class EmployeeController {
         res.status(200).send(employees);
     };
 
-    public getEmployee = async (req: Request, res: Response) => {
-        const employeeId = Number(req.params.id);
-        const employee = await this.employeeService.getEmployeeById(employeeId);
-        res.status(200).send(employee);
+    public getEmployee = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const employeeId = Number(req.params.id);
+            const employee = await this.employeeService.getEmployeeById(employeeId);
+            if (!employee) {
+                throw new Error(`No employee found with id :${employeeId}`);
+            }
+            res.status(200).send(employee);
+        } catch (error) {
+            next(error);
+        }
     };
 
     public createEmployee = async (req: Request, res: Response) => {
-        const email = req.body.email;
-        const name = req.body.name;
-        const newEmployee = await this.employeeService.createEmployee(email, name);
+        const { name, email, age, address } = req.body;
+        const newEmployee = await this.employeeService.createEmployee(email, name, age, address);
         res.status(200).send(newEmployee);
     };
 
@@ -46,7 +52,7 @@ class EmployeeController {
     };
 
     public deleteEmployee = async (req: Request, res: Response) => {
-        await this.employeeService.deleteEmployee({ id: Number(req.params.id) });
+        await this.employeeService.deleteEmployee(Number(req.params.id));
         res.status(204).send("Deleted");
     };
 }

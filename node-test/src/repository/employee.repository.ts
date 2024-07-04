@@ -1,5 +1,4 @@
-import { DataSource, Repository } from "typeorm";
-import dataSource from "../db/data-source.db";
+import { Repository } from "typeorm";
 import Employee from "../entity/employee.entity";
 
 class EmployeeRepository {
@@ -10,7 +9,7 @@ class EmployeeRepository {
     }
 
     async findOneBy(filter: Partial<Employee>): Promise<Employee> {
-        return this.repository.findOne({ where: filter });
+        return this.repository.findOne({ where: filter, relations: ["address"] });
     }
 
     async create(data: Employee): Promise<Employee> {
@@ -25,8 +24,12 @@ class EmployeeRepository {
     }
 
     async delete(filter: Partial<Employee>): Promise<void> {
-        await this.repository.softDelete(filter.id);
+        await this.repository.delete(filter.id);
     }
+
+    softDelete = async (employee: Employee): Promise<void> => {
+        await this.repository.softRemove(employee);
+    };
 }
 
 export default EmployeeRepository;

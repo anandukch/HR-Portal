@@ -17,6 +17,11 @@ server.get("/", (req: Request, res: Response) => {
 
 server.use("/employees", employeeRouter);
 
+server.use((err: Error, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send({ error: err.message });
+});
+
 (async () => {
     try {
         await dataSource.initialize();
