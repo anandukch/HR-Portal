@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "intro": "echo 'Hello I am Anandu'",
     "build": "rm -rf dist/ && tsc",
-    "start": "npm run build && node dist/app.js"
+    "start": "npm run build && node dist/src/app.js"
   },
   "keywords": [],
   "author": "",
