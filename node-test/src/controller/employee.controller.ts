@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 import HttpException from "../exceptions/http.exceptions";
+import { plainToInstance } from "class-transformer";
+import { CreateEmployeeDto } from "../dto/employee.dto";
+import { validate } from "class-validator";
 
 class EmployeeController {
     public router: Router;
@@ -33,12 +36,14 @@ class EmployeeController {
 
     public createEmployee = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { name, email, age, address } = req.body;
-            const emailFormat = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-            if (!email.match(emailFormat)) {
-                throw new HttpException(400, "Invalid email format");
+            const employeeDto = plainToInstance(CreateEmployeeDto, req.body);
+            const errors = await validate(employeeDto);
+            if (errors.length) {
+                console.log(JSON.stringify(errors));
+                
+                throw new HttpException(400, JSON.stringify(errors));
             }
-            const newEmployee = await this.employeeService.createEmployee(email, name, age, address);
+            const newEmployee = await this.employeeService.createEmployee(employeeDto.email, employeeDto.name, employeeDto.age, employeeDto.address);
             res.status(200).send(newEmployee);
         } catch (error) {
             next(error);
