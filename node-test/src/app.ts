@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import { loggerMiddleWare } from "./middleware/logger.middleware";
 import dataSource from "./db/data-source.db";
 import employeeRouter from "./routes/employee.routes";
+import HttpException from "./exceptions/http.exceptions";
+import errorMiddleware from "./middleware/error.middleware";
 
 const server = express();
 server.use(bodyParser.json());
@@ -17,10 +19,7 @@ server.get("/", (req: Request, res: Response) => {
 
 server.use("/employees", employeeRouter);
 
-server.use((err: Error, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send({ error: err.message });
-});
+server.use(errorMiddleware);
 
 (async () => {
     try {

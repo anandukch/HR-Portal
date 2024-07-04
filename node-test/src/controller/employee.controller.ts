@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
+import HttpException from "../exceptions/http.exceptions";
 
 class EmployeeController {
     public router: Router;
@@ -22,7 +23,7 @@ class EmployeeController {
             const employeeId = Number(req.params.id);
             const employee = await this.employeeService.getEmployeeById(employeeId);
             if (!employee) {
-                throw new Error(`No employee found with id :${employeeId}`);
+                throw new HttpException(404, `No employee found with id :${employeeId}`);
             }
             res.status(200).send(employee);
         } catch (error) {
@@ -30,10 +31,18 @@ class EmployeeController {
         }
     };
 
-    public createEmployee = async (req: Request, res: Response) => {
-        const { name, email, age, address } = req.body;
-        const newEmployee = await this.employeeService.createEmployee(email, name, age, address);
-        res.status(200).send(newEmployee);
+    public createEmployee = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { name, email, age, address } = req.body;
+            const emailFormat = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!email.match(emailFormat)) {
+                throw new HttpException(400, "Invalid email format");
+            }
+            const newEmployee = await this.employeeService.createEmployee(email, name, age, address);
+            res.status(200).send(newEmployee);
+        } catch (error) {
+            next(error);
+        }
     };
 
     public updateEmployee = async (req: Request, res: Response) => {
