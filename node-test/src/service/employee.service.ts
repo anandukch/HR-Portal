@@ -2,10 +2,7 @@ import Employee from "../entity/employee.entity";
 import EmployeeRepository from "../repository/employee.repository";
 
 class EmployeeService {
-    private employeeRespository: EmployeeRepository;
-    constructor() {
-        this.employeeRespository = new EmployeeRepository();
-    }
+    constructor(private employeeRespository: EmployeeRepository) {}
 
     getAllEmployees = async (): Promise<Employee[]> => {
         return this.employeeRespository.find();

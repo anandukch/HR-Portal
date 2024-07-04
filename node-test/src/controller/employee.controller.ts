@@ -2,15 +2,14 @@ import { Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 
 class EmployeeController {
-    private employeeService: EmployeeService;
     public router: Router;
-    constructor() {
-        this.employeeService = new EmployeeService();
+    constructor(private employeeService: EmployeeService) {
         this.router = Router();
         this.router.get("/", this.getAllEmployees);
         this.router.get("/:id", this.getEmployee);
         this.router.post("/", this.createEmployee);
         this.router.put("/:id", this.updateEmployee);
+        this.router.delete("/:id", this.deleteEmployee);
     }
 
     public getAllEmployees = async (req: Request, res: Response) => {
@@ -44,6 +43,11 @@ class EmployeeController {
         );
 
         res.status(200).send(updatedEmployee);
+    };
+
+    public deleteEmployee = async (req: Request, res: Response) => {
+        await this.employeeService.deleteEmployee({ id: Number(req.params.id) });
+        res.status(204).send("Deleted");
     };
 }
 

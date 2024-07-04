@@ -1,40 +1,31 @@
-import { DataSource } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import dataSource from "../db/data-source.db";
 import Employee from "../entity/employee.entity";
 
 class EmployeeRepository {
-    public datasource: DataSource;
-    constructor() {
-        this.datasource = dataSource;
-    }
+    constructor(private repository: Repository<Employee>) {}
 
     async find(): Promise<Employee[]> {
-        const employeeRepository = this.datasource.getRepository(Employee);
-        return employeeRepository.find();
+        return this.repository.find();
     }
 
     async findOneBy(filter: Partial<Employee>): Promise<Employee> {
-        const employeeRepository = this.datasource.getRepository(Employee);
-        return employeeRepository.findOne({ where: filter });
+        return this.repository.findOne({ where: filter });
     }
 
     async create(data: Employee): Promise<Employee> {
-        const employeeRepository = this.datasource.getRepository(Employee);
-
-        return employeeRepository.save(data);
+        return this.repository.save(data);
     }
 
     async update(filter: Partial<Employee>, data: Partial<Employee>): Promise<Employee> {
-        const employeeRepository = this.datasource.getRepository(Employee);
-        const employee = await employeeRepository.findOne({ where: filter });
+        const employee = await this.repository.findOne({ where: filter });
         employee.name = data.name;
         employee.email = data.email;
-        return employeeRepository.save(employee);
+        return this.repository.save(employee);
     }
 
     async delete(filter: Partial<Employee>): Promise<void> {
-        const employeeRepository = dataSource.getRepository(Employee);
-        await employeeRepository.softDelete(filter.id);
+        await this.repository.softDelete(filter.id);
     }
 }
 
