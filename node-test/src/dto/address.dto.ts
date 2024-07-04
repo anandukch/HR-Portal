@@ -9,3 +9,11 @@ export class CreateAddressDto {
     @IsString()
     pincode: string;
 }
+
+export class UpdateAddressDto {
+    @IsString()
+    line1: string;
+
+    @IsString()
+    pincode: string;
+}

@@ -1,5 +1,6 @@
 import Address from "../entity/address.entity";
 import Employee from "../entity/employee.entity";
+import HttpException from "../exceptions/http.exceptions";
 import EmployeeRepository from "../repository/employee.repository";
 
 class EmployeeService {
@@ -28,8 +29,18 @@ class EmployeeService {
         return this.employeeRespository.create(newEmployee);
     };
 
-    updateEmployee = async (filter: Partial<Employee>, employee: Partial<Employee>): Promise<Employee> => {
-        return this.employeeRespository.update(filter, employee);
+    updateEmployee = async (id: number, employee: Partial<Employee>): Promise<Employee> => {
+        const employeeToUpdate = await this.getEmployeeById(id);
+        if (!employeeToUpdate) {
+            throw new HttpException(404, `No employee found with id :${id}`);
+        }
+
+        employeeToUpdate.name = employee.name
+        employeeToUpdate.email = employee.email
+        employeeToUpdate.age = employee.age
+        employeeToUpdate.address.line1 = employee.address.line1
+        employeeToUpdate.address.pincode = employee.address.pincode
+        return this.employeeRespository.save(employeeToUpdate);
     };
 
     deleteEmployee = async (id: number): Promise<void> => {
