@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 import HttpException from "../exceptions/http.exceptions";
 import { plainToInstance } from "class-transformer";
-import { CreateEmployeeDto, UpdateEmployeeDto } from "../dto/employee.dto";
+import { CreateEmployeeDto, EmployeeIdDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import { validate } from "class-validator";
 
 class EmployeeController {
@@ -28,10 +28,16 @@ class EmployeeController {
 
     public getEmployee = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const employeeId = Number(req.params.id);
-            const employee = await this.employeeService.getEmployeeById(employeeId);
+            const employeeParamsDto = plainToInstance(EmployeeIdDto, req.params);
+            const errors = await validate(employeeParamsDto);
+            if (errors.length) {
+                console.log(JSON.stringify(errors));
+
+                throw new HttpException(400, JSON.stringify(errors));
+            }
+            const employee = await this.employeeService.getEmployeeById(employeeParamsDto.id);
             if (!employee) {
-                throw new HttpException(404, `No employee found with id :${employeeId}`);
+                throw new HttpException(404, `No employee found with id :${employeeParamsDto.id}`);
             }
             res.status(200).send(employee);
         } catch (error) {

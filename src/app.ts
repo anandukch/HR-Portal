@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import { loggerMiddleWare } from "./middleware/logger.middleware";
 import dataSource from "./db/data-source.db";
 import employeeRouter from "./routes/employee.routes";
-import HttpException from "./exceptions/http.exceptions";
 import errorMiddleware from "./middleware/error.middleware";
 
 const server = express();

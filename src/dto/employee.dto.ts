@@ -38,3 +38,9 @@ export class UpdateEmployeeDto {
     @Type(() => UpdateAddressDto)
     address: UpdateAddressDto;
 }
+
+export class EmployeeIdDto {
+    @IsNotEmpty()
+    @IsNumber()
+    id: number;
+}
