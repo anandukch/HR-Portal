@@ -21,7 +21,7 @@ describe("fizzBuzz test", () => {
         expect(fizzBuzz.fizzBuzz(45)).toBe("FizzBuzz");
     });
 
-    it("usign mocks", () => {
+    it("using mocks", () => {
         let mockFn = jest.fn(fizzBuzz.divisibleByThree).mockReturnValue(true);
         fizzBuzz.divisibleByThree = mockFn;
         expect(fizzBuzz.fizzBuzz(4)).toBe("Fizz");
@@ -35,4 +35,5 @@ describe("fizzBuzz test", () => {
         spy.mockRestore()
 
     });
+   
 });

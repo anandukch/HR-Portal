@@ -1,7 +1,8 @@
+
+import { when } from "jest-when";
 import Employee from "../../src/entity/employee.entity";
 import EmployeeRepository from "../../src/repository/employee.repository";
 import EmployeeService from "../../src/service/employee.service";
-import { Role } from "../../src/utils/role.enum";
 
 describe("Employee service", () => {
     let employeeRepository: EmployeeRepository;
@@ -25,17 +26,20 @@ describe("Employee service", () => {
     });
 
     it("should return an employees with the given id", async () => {
-        const employee = new Employee();
-        employee.id = 2;
-        employee.name = "test";
-        employee.email = "test@gmail.com";
-        employee.age = 23;
-        employee.role = Role.HR;
-        const mock = jest.fn(employeeRepository.findOneBy).mockResolvedValue(employee);
+        const mock = jest.fn();
+        when(mock)
+            .calledWith({ id: 1 })
+            .mockResolvedValue({ id: 1, name: "test" } as Employee);
         employeeRepository.findOneBy = mock;
-        const users = await employeeService.getEmployeeById(2);
-        expect(users).toEqual(employee);
+        const user = await employeeService.getEmployeeById(1);
+        expect(user!.name).toEqual("test");
         expect(mock).toHaveBeenCalledTimes(1);
     });
 
+    it('show throw exception',async()=>{
+        const mock = jest.fn();
+        when(mock).mockResolvedValue(null)
+        employeeRepository.findOneBy=  mock
+        // await expect(employeeRepository.findOneBy())
+    })
 });
