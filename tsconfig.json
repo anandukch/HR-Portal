@@ -7,5 +7,7 @@
         "outDir": "dist",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
-    }
+    },
+    "include": ["src/**/*.ts", ".env"],
+    "exclude": ["**/*test.ts"]
 }
