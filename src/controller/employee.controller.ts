@@ -2,19 +2,39 @@ import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 import HttpException from "../exceptions/http.exceptions";
 import { plainToInstance } from "class-transformer";
-import { CreateEmployeeDto, EmployeeIdDto, UpdateEmployeeDto } from "../dto/employee.dto";
+import { CreateEmployeeDto, EmployeeIdDto, LoginDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import { validate } from "class-validator";
+import { authorize } from "../middleware/authorize.middleware";
+import { RequestWithUser } from "../utils/requestWithUser";
+import { Role } from "../utils/role.enum";
 
 class EmployeeController {
     public router: Router;
     constructor(private employeeService: EmployeeService) {
         this.router = Router();
-        this.router.get("/", this.getAllEmployees);
+        this.router.get("/", authorize, this.getAllEmployees);
         this.router.get("/:id", this.getEmployee);
-        this.router.post("/", this.createEmployee);
+        this.router.post("/", authorize, this.createEmployee);
         this.router.put("/:id", this.updateEmployee);
         this.router.delete("/:id", this.deleteEmployee);
+
+        //authentication
+        this.router.post("/login", this.login);
     }
+
+    public login = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const loginDto = plainToInstance(LoginDto, req.body);
+            const errors = await validate(loginDto);
+            if (errors.length) {
+                throw new HttpException(400, errors);
+            }
+            const token = await this.employeeService.loginEmployee(loginDto.email, loginDto.password);
+            res.status(200).send(token);
+        } catch (error) {
+            next(error);
+        }
+    };
 
     public getAllEmployees = async (req: Request, res: Response, next: NextFunction) => {
         try {
@@ -28,16 +48,10 @@ class EmployeeController {
 
     public getEmployee = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const employeeParamsDto = plainToInstance(EmployeeIdDto, req.params);
-            const errors = await validate(employeeParamsDto);
-            if (errors.length) {
-                console.log(JSON.stringify(errors));
-
-                throw new HttpException(400, JSON.stringify(errors));
-            }
-            const employee = await this.employeeService.getEmployeeById(employeeParamsDto.id);
+            const employeeId = Number(req.params.id);
+            const employee = await this.employeeService.getEmployeeById(employeeId);
             if (!employee) {
-                throw new HttpException(404, `No employee found with id :${employeeParamsDto.id}`);
+                throw new HttpException(404, `No employee found with id :${employeeId}`);
             }
             res.status(200).send(employee);
         } catch (error) {
@@ -45,16 +59,23 @@ class EmployeeController {
         }
     };
 
-    public createEmployee = async (req: Request, res: Response, next: NextFunction) => {
+    public createEmployee = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
+            const role = req.role;
+            if (role != Role.HR) throw new HttpException(403, "You dont have poermission");
             const employeeDto = plainToInstance(CreateEmployeeDto, req.body);
             const errors = await validate(employeeDto);
             if (errors.length) {
-                console.log(JSON.stringify(errors));
-
-                throw new HttpException(400, JSON.stringify(errors));
+                throw new HttpException(400, errors);
             }
-            const newEmployee = await this.employeeService.createEmployee(employeeDto.email, employeeDto.name, employeeDto.age, employeeDto.address);
+            const newEmployee = await this.employeeService.createEmployee(
+                employeeDto.email,
+                employeeDto.name,
+                employeeDto.age,
+                employeeDto.password,
+                employeeDto.role,
+                employeeDto.address
+            );
             res.status(200).send(newEmployee);
         } catch (error) {
             next(error);
@@ -66,9 +87,7 @@ class EmployeeController {
             const employeeDto = plainToInstance(UpdateEmployeeDto, req.body);
             const errors = await validate(employeeDto);
             if (errors.length) {
-                console.log(JSON.stringify(errors));
-
-                throw new HttpException(400, JSON.stringify(errors));
+                throw new HttpException(400, errors);
             }
             const updatedEmployeeData = req.body;
             const employeeId = Number(req.params.id);

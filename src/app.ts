@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import express from "express";
 import bodyParser from "body-parser";
+import { config } from "dotenv";
+config();
 import { loggerMiddleWare } from "./middleware/logger.middleware";
 import dataSource from "./db/data-source.db";
 import employeeRouter from "./routes/employee.routes";
