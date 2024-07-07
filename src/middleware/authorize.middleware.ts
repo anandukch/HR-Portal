@@ -3,22 +3,25 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../utils/constants";
 import { jwtPayload } from "../utils/jwtPayload.type";
 import { RequestWithUser } from "../utils/requestWithUser";
+import { Role } from "../utils/role.enum";
 
-export const authorize = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-    try {
-        const token = getTokenFromRequestHeader(req);
-        console.log(token, JWT_SECRET);
-
-        const payload = jwt.verify(token, JWT_SECRET);
-
-        req.name = (payload as jwtPayload).name;
-        req.email = (payload as jwtPayload).email;
-        req.role = (payload as jwtPayload).role;
-
-        return next();
-    } catch (error) {
-        return next(error);
-    }
+export const authorise = (roles: Role[] | "all") => {
+    return (req: RequestWithUser, res: Response, next: NextFunction) => {
+        try {
+            const token = getTokenFromRequestHeader(req);
+            const payload = jwt.verify(token, JWT_SECRET);
+            const userRole = (payload as jwtPayload).role;
+            if (roles !== "all" || !roles.includes(userRole)) {
+                return res.status(403).send("You are not authorized to access this resource");
+            }
+            req.name = (payload as jwtPayload).name;
+            req.email = (payload as jwtPayload).email;
+            req.role = (payload as jwtPayload).role;
+            return next();
+        } catch (error) {
+            return next(error);
+        }
+    };
 };
 
 const getTokenFromRequestHeader = (req: RequestWithUser) => {
