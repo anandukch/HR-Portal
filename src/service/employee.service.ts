@@ -18,11 +18,11 @@ class EmployeeService {
     private employeeDepartmentRepository: EmployeeDepartmentRepository;
     constructor(private employeeRespository: EmployeeRepository) {
         this.departmentRepository = new DepartmentRepository(dataSource.getRepository(Department));
-        this.employeeDepartmentRepository = new EmployeeDepartmentRepository();
+        this.employeeDepartmentRepository = new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment));
     }
 
     getAllEmployees = async (): Promise<Employee[]> => {
-        console.log(await this.employeeDepartmentRepository.find());
+        // console.log(await this.employeeDepartmentRepository.findAll());
 
         return this.employeeRespository.find();
     };
@@ -50,12 +50,14 @@ class EmployeeService {
         if (!department) {
             throw new HttpException(404, `No department found with id :${departmentId}`);
         }
+
         this.employeeRespository.save(newEmployee);
         const employeeDepartment = new EmployeeDepartment();
         employeeDepartment.department = department;
         employeeDepartment.employee = newEmployee;
+        await this.employeeDepartmentRepository.save(employeeDepartment);
 
-        await this.employeeDepartmentRepository.create(employeeDepartment);
+        console.log(department, employeeDepartment, newEmployee);
 
         return newEmployee;
     };

@@ -12,8 +12,6 @@ export const authorize = (roles: Role[] | "all") => {
             const token = getTokenFromRequestHeader(req);
             const payload = jwt.verify(token, JWT_SECRET);
             const userRole = (payload as jwtPayload).role;     
-            console.log(userRole);
-                   
             if (!roles.includes(userRole) && roles !== "all") {
                 return res.status(403).send("You are not authorized to access this resource");
             }

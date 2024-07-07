@@ -4,12 +4,12 @@ import Department from "../entity/department.entity";
 class DepartmentRepository {
     constructor(private repository: Repository<Department>) {}
 
-    find = async (): Promise<Department[]> => {
-        return this.repository.find({});
+    find = async (relations?: {}): Promise<Department[]> => {
+        return this.repository.find(relations);
     };
 
     findOneBy = async (filter: Partial<Department>): Promise<Department> => {
-        return this.repository.findOne({ where: filter });
+        return this.repository.findOne({ where: filter, relations: ["employeeDepartments", "employeeDepartments.employee"] });
     };
 
     create = async (data: Department): Promise<Department> => {

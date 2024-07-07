@@ -3,15 +3,16 @@ import EmployeeDepartment from "../entity/employeeDepartment.entity";
 import dataSource from "../db/data-source.db";
 
 class EmployeeDepartmentRepository {
-    private repository: Repository<EmployeeDepartment>
-    constructor() {
-        this.repository = dataSource.getRepository(EmployeeDepartment)
-    }
+    constructor(private repository: Repository<EmployeeDepartment>) {}
 
-    find = async (): Promise<EmployeeDepartment[]> => {
+    findAll = async (): Promise<EmployeeDepartment[]> => {
         return this.repository.find({
             relations: ["employee", "department"],
         });
+    };
+
+    find = async (filter: Partial<EmployeeDepartment>): Promise<EmployeeDepartment[]> => {
+        return this.repository.find({ where: filter });
     };
 
     findOneBy = async (filter: Partial<EmployeeDepartment>): Promise<EmployeeDepartment> => {
@@ -20,6 +21,9 @@ class EmployeeDepartmentRepository {
 
     create = async (data: EmployeeDepartment): Promise<EmployeeDepartment> => {
         return this.repository.create(data);
+    };
+    save = async (data: EmployeeDepartment): Promise<EmployeeDepartment> => {
+        return this.repository.save(data);
     };
 }
 

@@ -5,11 +5,11 @@ import { NODE_ENV } from "../utils/constants";
 
 const dataSource = new DataSource({
     type: "postgres",
-    host: "localhost",
-    port: 5434,
-    database: "migration-test",
-    username: "test",
-    password: "test",
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    database: process.env.DB_NAME,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     extra: { max: 5, min: 2 },
     synchronize: false,
     logging: NODE_ENV == "dev" ? false : true,
