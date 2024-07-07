@@ -4,7 +4,7 @@ import HttpException from "../exceptions/http.exceptions";
 const errorMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
     if (err instanceof HttpException) {
-        return res.status(err.status).send({ error: err.message, code: err.status });
+        return res.status(err.status).send({ message: err.message, errors: err.errors });
     }
     res.status(500).send({ error: err.message });
 };

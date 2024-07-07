@@ -6,10 +6,7 @@ import DepartmentRepository from "../repository/department.repository";
 import EmployeeDepartmentRepository from "../repository/employeeDepartment.repository";
 
 class DepartmentService {
-    // private employeeDepartmentRepository: EmployeeDepartmentRepository;
-    constructor(private departmentRepository: DepartmentRepository) {
-        // this.employeeDepartmentRepository = new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment));
-    }
+    constructor(private departmentRepository: DepartmentRepository) {}
 
     getAllDepartments = async () => {
         return this.departmentRepository.find();
@@ -54,7 +51,6 @@ class DepartmentService {
         if (!department) {
             throw new HttpException(404, `No department found with id :${id}`);
         }
-
         return (await this.getDepartmentById(id)).employeeDepartments;
     };
 }
