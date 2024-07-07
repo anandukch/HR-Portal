@@ -7,6 +7,7 @@ import { loggerMiddleWare } from "./middleware/logger.middleware";
 import dataSource from "./db/data-source.db";
 import employeeRouter from "./routes/employee.routes";
 import errorMiddleware from "./middleware/error.middleware";
+import departmentRouter from "./routes/department.routes";
 
 const server = express();
 server.use(bodyParser.json());
@@ -19,6 +20,7 @@ server.get("/", (req: Request, res: Response) => {
 });
 
 server.use("/employees", employeeRouter);
+server.use("/departments", departmentRouter);
 
 server.use(errorMiddleware);
 
