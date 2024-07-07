@@ -7,6 +7,7 @@ import { validate } from "class-validator";
 import { authorize } from "../middleware/authorize.middleware";
 import { RequestWithUser } from "../utils/requestWithUser";
 import { Role } from "../utils/role.enum";
+import Employee from "../entity/employee.entity";
 
 class EmployeeController {
     public router: Router;
@@ -66,14 +67,7 @@ class EmployeeController {
             if (errors.length) {
                 throw new HttpException(400, errors);
             }
-            const newEmployee = await this.employeeService.createEmployee(
-                employeeDto.email,
-                employeeDto.name,
-                employeeDto.age,
-                employeeDto.password,
-                employeeDto.role,
-                employeeDto.address
-            );
+            const newEmployee = await this.employeeService.createEmployee(employeeDto);
             res.status(200).send(newEmployee);
         } catch (error) {
             next(error);

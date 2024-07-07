@@ -3,7 +3,6 @@ import { DataSource } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import { NODE_ENV } from "../utils/constants";
 
-
 const dataSource = new DataSource({
     type: "postgres",
     host: "localhost",
@@ -13,7 +12,7 @@ const dataSource = new DataSource({
     password: "test",
     extra: { max: 5, min: 2 },
     synchronize: false,
-    logging: true,
+    logging: NODE_ENV == "dev" ? false : true,
     namingStrategy: new SnakeNamingStrategy(),
     entities: NODE_ENV == "dev" ? ["src/entity/*.ts"] : ["dist/entity/*.js"],
     migrations: ["dist/db/migrations/*.js"],

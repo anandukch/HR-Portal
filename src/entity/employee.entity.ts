@@ -1,7 +1,8 @@
-import { Column, Entity, OneToOne } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne } from "typeorm";
 import AbstractEntity from "./abstract.entity";
 import Address from "./address.entity";
 import { Role } from "../utils/role.enum";
+import EmployeeDepartment from "./employeeDepartment.entity";
 
 @Entity()
 class Employee extends AbstractEntity {
@@ -25,6 +26,9 @@ class Employee extends AbstractEntity {
 
     @Column({ nullable: true })
     role: Role;
+
+    @OneToMany(()=> EmployeeDepartment, (employeeDepartment) => employeeDepartment.employee)
+    employeeDepartments: EmployeeDepartment[];
 }
 
 export default Employee;
