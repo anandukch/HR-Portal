@@ -22,6 +22,8 @@ class EmployeeService {
     }
 
     getAllEmployees = async (): Promise<Employee[]> => {
+        console.log(await this.employeeDepartmentRepository.find());
+
         return this.employeeRespository.find();
     };
 
@@ -48,7 +50,7 @@ class EmployeeService {
         if (!department) {
             throw new HttpException(404, `No department found with id :${departmentId}`);
         }
-        await this.employeeRespository.save(newEmployee)
+        this.employeeRespository.save(newEmployee);
         const employeeDepartment = new EmployeeDepartment();
         employeeDepartment.department = department;
         employeeDepartment.employee = newEmployee;
