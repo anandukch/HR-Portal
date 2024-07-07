@@ -12,9 +12,9 @@ class EmployeeController {
     public router: Router;
     constructor(private employeeService: EmployeeService) {
         this.router = Router();
-        this.router.get("/", authorize, this.getAllEmployees);
+        this.router.get("/", authorize([Role.HR]), this.getAllEmployees);
         this.router.get("/:id", this.getEmployee);
-        this.router.post("/", authorize, this.createEmployee);
+        this.router.post("/", authorize([Role.HR]), this.createEmployee);
         this.router.put("/:id", this.updateEmployee);
         this.router.delete("/:id", this.deleteEmployee);
 
@@ -61,8 +61,6 @@ class EmployeeController {
 
     public createEmployee = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
-            const role = req.role;
-            if (role != Role.HR) throw new HttpException(403, "You dont have poermission");
             const employeeDto = plainToInstance(CreateEmployeeDto, req.body);
             const errors = await validate(employeeDto);
             if (errors.length) {

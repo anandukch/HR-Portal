@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
+import { NODE_ENV } from "../utils/constants";
+
 
 const dataSource = new DataSource({
     type: "postgres",
@@ -13,7 +15,7 @@ const dataSource = new DataSource({
     synchronize: false,
     logging: true,
     namingStrategy: new SnakeNamingStrategy(),
-    entities: ["dist/entity/*.js"],
+    entities: NODE_ENV == "dev" ? ["src/entity/*.ts"] : ["dist/entity/*.js"],
     migrations: ["dist/db/migrations/*.js"],
 });
 

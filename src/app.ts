@@ -8,6 +8,7 @@ import dataSource from "./db/data-source.db";
 import employeeRouter from "./routes/employee.routes";
 import errorMiddleware from "./middleware/error.middleware";
 import departmentRouter from "./routes/department.routes";
+import { NODE_ENV } from "./utils/constants";
 
 const server = express();
 server.use(bodyParser.json());
@@ -26,6 +27,7 @@ server.use(errorMiddleware);
 
 (async () => {
     try {
+      
         await dataSource.initialize();
     } catch (e) {
         console.log("Failed", e);
@@ -35,3 +37,4 @@ server.use(errorMiddleware);
         console.log("server listening to 3000");
     });
 })();
+
