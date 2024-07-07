@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { CreateAddressDto, UpdateAddressDto } from "./address.dto";
 import { Type } from "class-transformer";
 import "reflect-metadata";
@@ -38,15 +38,19 @@ export class CreateEmployeeDto {
 
 export class UpdateEmployeeDto {
     @IsString()
+    @IsOptional()
     name: string;
 
     @IsEmail()
     @IsString()
+    @IsOptional()
     email: string;
 
     @IsNumber()
+    @IsOptional()
     age: number;
 
+    @IsOptional()
     @ValidateNested({ each: true })
     @Type(() => UpdateAddressDto)
     address: UpdateAddressDto;

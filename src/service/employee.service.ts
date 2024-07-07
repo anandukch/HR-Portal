@@ -22,8 +22,6 @@ class EmployeeService {
     }
 
     getAllEmployees = async (): Promise<Employee[]> => {
-        // console.log(await this.employeeDepartmentRepository.findAll());
-
         return this.employeeRespository.find();
     };
 
@@ -56,13 +54,10 @@ class EmployeeService {
         employeeDepartment.department = department;
         employeeDepartment.employee = newEmployee;
         await this.employeeDepartmentRepository.save(employeeDepartment);
-
-        console.log(department, employeeDepartment, newEmployee);
-
         return newEmployee;
     };
 
-    updateEmployee = async (id: number, employee: Partial<Employee>): Promise<Employee> => {
+    updateEmployee = async (id: number, employee: Partial<Employee>) => {
         const employeeToUpdate = await this.getEmployeeById(id);
         if (!employeeToUpdate) {
             throw new HttpException(404, `No employee found with id :${id}`);
@@ -73,7 +68,7 @@ class EmployeeService {
         employeeToUpdate.age = employee.age;
         employeeToUpdate.address.line1 = employee.address.line1;
         employeeToUpdate.address.pincode = employee.address.pincode;
-        return this.employeeRespository.save(employeeToUpdate);
+        return this.employeeRespository.update(id, employee);
     };
 
     deleteEmployee = async (id: number): Promise<void> => {

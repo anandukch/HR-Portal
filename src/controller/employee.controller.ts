@@ -1,13 +1,10 @@
 import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 import HttpException from "../exceptions/http.exceptions";
-import { plainToInstance } from "class-transformer";
-import { CreateEmployeeDto, EmployeeIdDto, LoginDto, UpdateEmployeeDto } from "../dto/employee.dto";
-import { validate } from "class-validator";
+import { CreateEmployeeDto, LoginDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import { authorize } from "../middleware/authorize.middleware";
 import { RequestWithUser } from "../utils/requestWithUser";
 import { Role } from "../utils/role.enum";
-import { formatError } from "../utils/formatError.utils";
 import validationMiddleware from "../middleware/validate.middleware";
 
 class EmployeeController {

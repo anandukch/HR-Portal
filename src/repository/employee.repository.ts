@@ -6,7 +6,7 @@ class EmployeeRepository {
 
     find = async (): Promise<Employee[]> => {
         return this.repository.find({
-            relations: ["address", "employeeDepartments", "employeeDepartments.department"]
+            relations: ["address", "employeeDepartments", "employeeDepartments.department"],
         });
     };
 
@@ -16,6 +16,9 @@ class EmployeeRepository {
 
     create = async (data: Employee): Promise<Employee> => {
         return this.repository.create(data);
+    };
+    update = async (id: number, employee: Partial<Employee>) => {
+        return this.repository.update({ id }, employee);
     };
 
     save = async (employee: Employee): Promise<Employee> => {
