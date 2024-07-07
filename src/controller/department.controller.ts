@@ -67,7 +67,6 @@ class DepartmentController {
             next(error);
         }
     };
-
 }
 
 export default DepartmentController;
