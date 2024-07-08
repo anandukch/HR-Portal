@@ -1,5 +1,5 @@
 import dataSource from "../db/data-source.db";
-import { CreateEmployeeDto } from "../dto/employee.dto";
+import { CreateEmployeeDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import Address from "../entity/address.entity";
 import Department from "../entity/department.entity";
 import Employee from "../entity/employee.entity";
@@ -13,13 +13,16 @@ import { jwtPayload } from "../utils/jwtPayload.type";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import DepartmentService from "./department.service";
+import EmployeeDepartmentService from "./employeeDepartment.service";
 
 class EmployeeService {
     private departmentService: DepartmentService;
-    private employeeDepartmentRepository: EmployeeDepartmentRepository;
+    private employeeDepartmentService: EmployeeDepartmentService;
     constructor(private employeeRespository: EmployeeRepository) {
         this.departmentService = new DepartmentService(new DepartmentRepository(dataSource.getRepository(Department)));
-        this.employeeDepartmentRepository = new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment));
+        this.employeeDepartmentService = new EmployeeDepartmentService(
+            new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment))
+        );
     }
 
     getAllEmployees = async (): Promise<Employee[]> => {
@@ -47,29 +50,40 @@ class EmployeeService {
 
         const department = await this.departmentService.getDepartmentById(departmentId);
         if (!department) {
-            throw new HttpException(404, `No department found with id :${departmentId}`);
+            throw new HttpException(404, `No department found with id : ${departmentId}`);
         }
-
         this.employeeRespository.save(newEmployee);
         const employeeDepartment = new EmployeeDepartment();
         employeeDepartment.department = department;
         employeeDepartment.employee = newEmployee;
-        await this.employeeDepartmentRepository.save(employeeDepartment);
+        await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
         return newEmployee;
     };
 
-    updateEmployee = async (id: number, employee: Partial<Employee>) => {
+    updateEmployee = async (id: number, employee: UpdateEmployeeDto) => {
         const employeeToUpdate = await this.getEmployeeById(id);
         if (!employeeToUpdate) {
             throw new HttpException(404, `No employee found with id :${id}`);
         }
-
         employeeToUpdate.name = employee.name;
         employeeToUpdate.email = employee.email;
         employeeToUpdate.age = employee.age;
-        employeeToUpdate.address.line1 = employee.address.line1;
-        employeeToUpdate.address.pincode = employee.address.pincode;
-        return this.employeeRespository.update(id, employee);
+        if (employee.address) {
+            employeeToUpdate.address.line1 = employee.address.line1;
+            employeeToUpdate.address.pincode = employee.address.pincode;
+        }
+        if (employee.departmentId) {
+            const department = await this.departmentService.getDepartmentById(employee.departmentId);
+            if (!department) {
+                throw new HttpException(404, `No department found with id :${employee.departmentId}`);
+            }
+            const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee: employeeToUpdate });
+            if (employeeDepartment) {
+                employeeDepartment.department = department;
+                await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
+            }
+        }
+        return this.employeeRespository.save(employeeToUpdate);
     };
 
     deleteEmployee = async (id: number): Promise<void> => {

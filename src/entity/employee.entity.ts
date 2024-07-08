@@ -3,6 +3,7 @@ import AbstractEntity from "./abstract.entity";
 import Address from "./address.entity";
 import { Role } from "../utils/role.enum";
 import EmployeeDepartment from "./employeeDepartment.entity";
+import Department from "./department.entity";
 
 @Entity()
 class Employee extends AbstractEntity {
@@ -29,6 +30,9 @@ class Employee extends AbstractEntity {
 
     @OneToMany(()=> EmployeeDepartment, (employeeDepartment) => employeeDepartment.employee)
     employeeDepartments: EmployeeDepartment[];
+
+    // @OneToMany(()=>Department, department => department.employee)
+    // department: Department;
 }
 
 export default Employee;

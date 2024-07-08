@@ -60,6 +60,10 @@ export class UpdateEmployeeDto {
     @IsEnum(Role)
     role: Role;
 
+    @IsOptional()
+    @IsNumber()
+    departmentId: number;
+
 
 
 }

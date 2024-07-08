@@ -2,6 +2,8 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import { NODE_ENV } from "../utils/constants";
+import { config } from "dotenv";
+config();
 
 const dataSource = new DataSource({
     type: "postgres",

@@ -14,6 +14,10 @@ class DepartmentService {
     };
 
     createDepartment = async (name: string) => {
+        const existingDepartment = await this.departmentRepository.findOneBy({ name });
+        if (existingDepartment) {
+            throw new HttpException(400, `Department with name :${name} already exists`);
+        }
         const newDepartment = new Department();
         newDepartment.name = name;
         return this.departmentRepository.create(newDepartment);
