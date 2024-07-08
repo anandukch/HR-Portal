@@ -12,12 +12,13 @@ import { JWT_SECRET, JWT_VALIDITY } from "../utils/constants";
 import { jwtPayload } from "../utils/jwtPayload.type";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import DepartmentService from "./department.service";
 
 class EmployeeService {
-    private departmentRepository: DepartmentRepository;
+    private departmentService: DepartmentService;
     private employeeDepartmentRepository: EmployeeDepartmentRepository;
     constructor(private employeeRespository: EmployeeRepository) {
-        this.departmentRepository = new DepartmentRepository(dataSource.getRepository(Department));
+        this.departmentService = new DepartmentService(new DepartmentRepository(dataSource.getRepository(Department)));
         this.employeeDepartmentRepository = new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment));
     }
 
@@ -44,7 +45,7 @@ class EmployeeService {
 
         newEmployee.address = newAddress;
 
-        const department = await this.departmentRepository.findOneBy({ id: departmentId });
+        const department = await this.departmentService.getDepartmentById(departmentId);
         if (!department) {
             throw new HttpException(404, `No department found with id :${departmentId}`);
         }

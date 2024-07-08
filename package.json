@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "app.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "jest",
         "intro": "echo 'Hello I am Anandu'",
         "build": "rm -rf dist/ && tsc",
         "start": "npm run build && node dist/app.js",
@@ -27,6 +27,7 @@
         "jsonwebtoken": "^9.0.2",
         "pg": "^8.12.0",
         "reflect-metadata": "^0.2.2",
+        "ts-jest": "^29.1.5",
         "typeorm": "^0.3.20",
         "typeorm-naming-strategies": "^4.1.0"
     },
@@ -41,5 +42,15 @@
         "nodemon": "^3.1.4",
         "ts-node": "^10.9.2",
         "typescript": "^5.5.3"
+    },
+    "jest": {
+        "transform": {
+            "^.+\\.(t)s$": "ts-jest"
+        },
+        "verbose": true,
+        "collectCoverageFrom": [
+            "<rootDir>/src/**/*.ts",
+            "!**/index.ts"
+        ]
     }
 }

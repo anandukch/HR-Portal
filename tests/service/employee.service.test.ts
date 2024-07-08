@@ -3,10 +3,13 @@ import Employee from "../../src/entity/employee.entity";
 import EmployeeRepository from "../../src/repository/employee.repository";
 import EmployeeService from "../../src/service/employee.service";
 import { Role } from "../../src/utils/role.enum";
+import DepartmentRepository from "../../src/repository/department.repository";
+import Department from "../../src/entity/department.entity";
 
 describe("Employee service", () => {
     let employeeRepository: EmployeeRepository;
     let employeeService: EmployeeService;
+    let departmentRepository: DepartmentRepository;
 
     beforeAll(() => {
         const dataSource = {
@@ -14,6 +17,7 @@ describe("Employee service", () => {
         };
 
         employeeRepository = new EmployeeRepository(dataSource.getRepository(Employee)) as jest.Mocked<EmployeeRepository>;
+        departmentRepository = new DepartmentRepository(dataSource.getRepository(Department)) as jest.Mocked<DepartmentRepository>;
         employeeService = new EmployeeService(employeeRepository);
     });
 
@@ -44,11 +48,19 @@ describe("Employee service", () => {
     });
 
     it("should create an employee", async () => {
-        const mock = jest.fn();
-        when(mock)
+        const employeeMock = jest.fn();
+        const departmentMock = jest.fn();
+    
+        when(employeeMock)
             .calledWith({ name: "test" })
             .mockResolvedValue({ id: 1, name: "test" } as Employee);
-        employeeRepository.create = mock;
+        when(departmentMock)
+            .calledWith(1)  
+            .mockResolvedValue({ id: 1, name: "HR" }); 
+    
+        employeeRepository.create = employeeMock;
+        departmentRepository.findOneBy = departmentMock;
+    
         const user = await employeeService.createEmployee({
             name: "test",
             age: 20,
@@ -61,7 +73,10 @@ describe("Employee service", () => {
             },
             departmentId: 1,
         });
+    
         expect(user!.name).toEqual("test");
-        expect(mock).toHaveBeenCalledTimes(1);
+        expect(employeeMock).toHaveBeenCalledTimes(1);
+        expect(departmentMock).toHaveBeenCalledTimes(1);
+        expect(departmentMock).toHaveBeenCalledWith(1); 
     });
 });
