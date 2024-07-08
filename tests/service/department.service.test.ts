@@ -48,8 +48,44 @@ describe("Department service", () => {
 
     it("should create a department", async () => {
         const mock = jest.fn();
-        when(mock).mockResolvedValue(null);
+        when(mock)
+            .calledWith({ id: 1 })
+            .mockResolvedValue({ id: 1, name: "test" } as Department);
+
         departmentRepository.findOneBy = mock;
         // await expect(employeeRepository.findOneBy())
+        const createMock = jest.fn();
+        when(createMock).mockResolvedValue({ name: "test" });
+        departmentRepository.create = createMock;
+        const response = await departmentService.createDepartment("test");
+        expect(response).toEqual({ name: "test" });
+    });
+
+    it("should update a department", async () => {
+        const mock = jest.fn();
+        when(mock).calledWith(1).mockResolvedValue({ id: 1, name: "test" } as Department);
+        departmentService.getDepartmentById = mock;
+
+        const saveMock = jest.fn();
+        when(saveMock).mockResolvedValue({ name: "test" });
+        departmentRepository.save = saveMock;
+        const reposne = await departmentService.updateDepartment(1, { name: "test" });
+        expect(reposne).toEqual({ name: "test" });
+        expect(saveMock).toHaveBeenCalledTimes(1);
+        expect(mock).toHaveBeenCalledTimes(1);
+    });
+
+    it("should return error on update a department", async () => {
+        const mock = jest.fn();
+        when(mock).calledWith(1).mockResolvedValue(null);
+        departmentService.getDepartmentById = mock;
+
+        const saveMock = jest.fn();
+        when(saveMock).mockResolvedValue({ name: "test" });
+        departmentRepository.save = saveMock;
+        const reposne = await departmentService.updateDepartment(1, { name: "test" });
+        expect(reposne).toEqual({ name: "test" });
+        expect(saveMock).toHaveBeenCalledTimes(1);
+        expect(mock).toHaveBeenCalledTimes(1);
     });
 });
