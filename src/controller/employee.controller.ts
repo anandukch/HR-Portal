@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 import HttpException from "../exceptions/http.exceptions";
-import { CreateEmployeeDto, LoginDto, UpdateEmployeeDto } from "../dto/employee.dto";
+import { CreateEmployeeDto, EmployeeResposneDto, LoginDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import { authorize } from "../middleware/authorize.middleware";
 import { RequestWithUser } from "../utils/requestWithUser";
 import { Role } from "../utils/role.enum";
 import validationMiddleware from "../middleware/validate.middleware";
+import { reponseHandler } from "../utils/reponse.utils";
 
 class EmployeeController {
     public router: Router;
@@ -25,17 +26,24 @@ class EmployeeController {
         try {
             const loginDto = req.body as LoginDto;
             const token = await this.employeeService.loginEmployee(loginDto.email, loginDto.password);
-            res.status(200).send(token);
+            res.status(200).json(reponseHandler("success", "Login successful", { token }));
         } catch (error) {
             next(error);
         }
     };
 
-    public getAllEmployees = async (req: Request, res: Response, next: NextFunction) => {
+    public getAllEmployees = async (_: Request, res: Response, next: NextFunction) => {
         try {
             const employees = await this.employeeService.getAllEmployees();
             if (employees.length == 0) throw new HttpException(404, "No employees found");
-            res.status(200).send(employees);
+
+            res.status(200).send(
+                reponseHandler(
+                    "success",
+                    "Employees found",
+                    employees.map((employee) => new EmployeeResposneDto(employee))
+                )
+            );
         } catch (error) {
             next(error);
         }
@@ -48,11 +56,7 @@ class EmployeeController {
             if (!employee) {
                 throw new HttpException(404, `No employee found with id : ${employeeId}`);
             }
-            res.status(200).json({
-                status: "success",
-                message: "Employee found",
-                data: employee,
-            });
+            res.status(200).json(reponseHandler("success", "Employee found", new EmployeeResposneDto(employee)));
         } catch (error) {
             next(error);
         }
@@ -61,7 +65,7 @@ class EmployeeController {
     public createEmployee = async (req: RequestWithUser, res: Response, next: NextFunction) => {
         try {
             const newEmployee = await this.employeeService.createEmployee(req.body);
-            res.status(200).send(newEmployee);
+            res.status(200).json(reponseHandler("success", "Employee created", new EmployeeResposneDto(newEmployee)));
         } catch (error) {
             next(error);
         }
@@ -71,9 +75,8 @@ class EmployeeController {
         try {
             const updatedEmployeeData = req.body;
             const employeeId = Number(req.params.id);
-            const updatedEmployee = await this.employeeService.updateEmployee(employeeId, updatedEmployeeData);
-
-            res.status(200).send(updatedEmployee);
+            await this.employeeService.updateEmployee(employeeId, updatedEmployeeData);
+            res.status(200).json(reponseHandler("success", "Employee updated"));
         } catch (error) {
             next(error);
         }
@@ -82,7 +85,7 @@ class EmployeeController {
     public deleteEmployee = async (req: Request, res: Response, next: NextFunction) => {
         try {
             await this.employeeService.deleteEmployee(Number(req.params.id));
-            res.status(204).send("Deleted");
+            res.status(204).json(reponseHandler("success", "Employee deleted"));
         } catch (error) {
             next(error);
         }

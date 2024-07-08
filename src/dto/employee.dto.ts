@@ -3,6 +3,7 @@ import { CreateAddressDto, UpdateAddressDto } from "./address.dto";
 import { Type } from "class-transformer";
 import "reflect-metadata";
 import { Role } from "../utils/role.enum";
+import Employee from "../entity/employee.entity";
 
 export class CreateEmployeeDto {
     @IsNotEmpty()
@@ -54,6 +55,13 @@ export class UpdateEmployeeDto {
     @ValidateNested({ each: true })
     @Type(() => UpdateAddressDto)
     address: UpdateAddressDto;
+
+    @IsOptional()
+    @IsEnum(Role)
+    role: Role;
+
+
+
 }
 
 export class EmployeeIdDto {
@@ -70,4 +78,13 @@ export class LoginDto {
     @IsNotEmpty()
     @IsString()
     password: string;
+}
+
+export class EmployeeResposneDto {
+    password: string;
+
+    public constructor(employee: Employee) {
+        Object.assign(this, employee);
+        delete this.password;
+    }
 }

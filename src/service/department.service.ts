@@ -1,9 +1,6 @@
-import dataSource from "../db/data-source.db";
 import Department from "../entity/department.entity";
-import EmployeeDepartment from "../entity/employeeDepartment.entity";
 import HttpException from "../exceptions/http.exceptions";
 import DepartmentRepository from "../repository/department.repository";
-import EmployeeDepartmentRepository from "../repository/employeeDepartment.repository";
 
 class DepartmentService {
     constructor(private departmentRepository: DepartmentRepository) {}
@@ -37,7 +34,6 @@ class DepartmentService {
         if (!department) {
             throw new HttpException(404, `No department found with id :${id}`);
         }
-
         const departmentEmployees = await this.getDepartmentEmployees(id);
         if (departmentEmployees.length > 0) {
             throw new HttpException(400, `Department with id :${id} has employees`);
