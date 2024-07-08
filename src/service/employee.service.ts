@@ -16,10 +16,8 @@ import DepartmentService from "./department.service";
 import EmployeeDepartmentService from "./employeeDepartment.service";
 
 class EmployeeService {
-    private departmentService: DepartmentService;
     private employeeDepartmentService: EmployeeDepartmentService;
-    constructor(private employeeRespository: EmployeeRepository) {
-        this.departmentService = new DepartmentService(new DepartmentRepository(dataSource.getRepository(Department)));
+    constructor(private employeeRespository: EmployeeRepository, private departmentService: DepartmentService) {
         this.employeeDepartmentService = new EmployeeDepartmentService(
             new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment))
         );
@@ -52,7 +50,7 @@ class EmployeeService {
         if (!department) {
             throw new HttpException(404, `No department found with id : ${departmentId}`);
         }
-        this.employeeRespository.save(newEmployee);
+        await this.employeeRespository.save(newEmployee);
         const employeeDepartment = new EmployeeDepartment();
         employeeDepartment.department = department;
         employeeDepartment.employee = newEmployee;
@@ -72,18 +70,29 @@ class EmployeeService {
             employeeToUpdate.address.line1 = employee.address.line1;
             employeeToUpdate.address.pincode = employee.address.pincode;
         }
+        await this.employeeRespository.save(employeeToUpdate);
         if (employee.departmentId) {
             const department = await this.departmentService.getDepartmentById(employee.departmentId);
             if (!department) {
                 throw new HttpException(404, `No department found with id :${employee.departmentId}`);
             }
-            const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee: employeeToUpdate });
-            if (employeeDepartment) {
-                employeeDepartment.department = department;
-                await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
+            const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee_id: id });
+
+            if (employeeDepartment.department_id == employee.departmentId) {
+                throw new HttpException(400, `Employee is already assigned to this department`);
             }
+
+            // updating the end date of the current employee department
+            employeeDepartment.endDate = new Date();
+            await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
+
+            // creating new employee department
+            const newEmployeeDepartment = new EmployeeDepartment();
+            newEmployeeDepartment.department = department;
+            newEmployeeDepartment.employee = employeeToUpdate;
+            await this.employeeDepartmentService.saveEmployeeDepartment(newEmployeeDepartment);
         }
-        return this.employeeRespository.save(employeeToUpdate);
+        return employeeToUpdate;
     };
 
     deleteEmployee = async (id: number): Promise<void> => {

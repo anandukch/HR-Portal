@@ -4,7 +4,9 @@ import Department from "../entity/department.entity";
 import DepartmentRepository from "../repository/department.repository";
 import DepartmentService from "../service/department.service";
 
-const departmentController = new DepartmentController(new DepartmentService(new DepartmentRepository(dataSource.getRepository(Department))));
+const departmentService = new DepartmentService(new DepartmentRepository(dataSource.getRepository(Department)));
+const departmentController = new DepartmentController(departmentService);
 const departmentRouter = departmentController.router;
 
 export default departmentRouter;
+export { departmentService };
