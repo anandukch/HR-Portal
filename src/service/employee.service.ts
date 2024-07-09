@@ -1,4 +1,4 @@
-import dataSource from "../db/data-source.db";
+import dataSource from "../db/dataSource.db";
 import { CreateEmployeeDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import Address from "../entity/address.entity";
 import Department from "../entity/department.entity";

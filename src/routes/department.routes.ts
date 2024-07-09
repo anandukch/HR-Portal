@@ -1,5 +1,5 @@
 import DepartmentController from "../controller/department.controller";
-import dataSource from "../db/data-source.db";
+import dataSource from "../db/dataSource.db";
 import Department from "../entity/department.entity";
 import DepartmentRepository from "../repository/department.repository";
 import DepartmentService from "../service/department.service";

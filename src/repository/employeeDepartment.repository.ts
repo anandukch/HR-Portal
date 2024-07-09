@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import EmployeeDepartment from "../entity/employeeDepartment.entity";
-import dataSource from "../db/data-source.db";
+import dataSource from "../db/dataSource.db";
 
 class EmployeeDepartmentRepository {
     constructor(private repository: Repository<EmployeeDepartment>) {}

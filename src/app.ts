@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import { config } from "dotenv";
 config();
 import { loggerMiddleWare } from "./middleware/logger.middleware";
-import dataSource from "./db/data-source.db";
+import dataSource from "./db/dataSource.db";
 import employeeRouter from "./routes/employee.routes";
 import errorMiddleware from "./middleware/error.middleware";
 import departmentRouter from "./routes/department.routes";
