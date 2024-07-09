@@ -6,6 +6,7 @@ import { Role } from "../utils/role.enum";
 import validationMiddleware from "../middleware/validate.middleware";
 import { CreateDepartmentDto } from "../dto/department.dto";
 import { reponseHandler } from "../utils/reponse.utils";
+import asyncHandler from "../utils/tryCatch.utils";
 
 class DepartmentController {
     public router: Router;
@@ -19,59 +20,39 @@ class DepartmentController {
         this.router.delete("/:id", authorize([Role.HR]), this.deleteDepartment);
     }
 
-    public getAllDepartments = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const departments = await this.departmentService.getAllDepartments();
-            if (departments.length == 0) throw new HttpException(404, "No departments found");
-            res.status(200).send(departments);
-        } catch (error) {
-            next(error);
-        }
-    };
+    public getAllDepartments = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const departments = await this.departmentService.getAllDepartments();
+        if (departments.length == 0) throw new HttpException(404, "No departments found");
+        res.status(200).send(departments);
+    });
 
-    public getDepartment = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const departmentId = Number(req.params.id);
-            const department = await this.departmentService.getDepartmentById(departmentId);
-            if (!department) {
-                throw new HttpException(404, `No department found with id :${departmentId}`);
-            }
-            res.status(200).json(reponseHandler("success", "Department found", department));
-        } catch (error) {
-            next(error);
+    public getDepartment = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const departmentId = Number(req.params.id);
+        const department = await this.departmentService.getDepartmentById(departmentId);
+        if (!department) {
+            throw new HttpException(404, `No department found with id :${departmentId}`);
         }
-    };
+        res.status(200).json(reponseHandler("success", "Department found", department));
+    });
 
-    public createDepartment = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const name = req.body.name;
-            const department = await this.departmentService.createDepartment(name);
-            res.status(201).json(reponseHandler("success", "Department created", department));
-        } catch (error) {
-            next(error);
-        }
-    };
+    public createDepartment = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const name = req.body.name;
+        const department = await this.departmentService.createDepartment(name);
+        res.status(201).json(reponseHandler("success", "Department created", department));
+    });
 
-    public updateDepartment = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const departmentId = Number(req.params.id);
-            const name = req.body.name;
-            const department = await this.departmentService.updateDepartment(departmentId, { name });
-            res.status(200).json(reponseHandler("success", "Department updated", department));
-        } catch (error) {
-            next(error);
-        }
-    };
+    public updateDepartment = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const departmentId = Number(req.params.id);
+        const name = req.body.name;
+        const department = await this.departmentService.updateDepartment(departmentId, { name });
+        res.status(200).json(reponseHandler("success", "Department updated", department));
+    });
 
-    public deleteDepartment = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const departmentId = Number(req.params.id);
-            await this.departmentService.deleteDepartment(departmentId);
-            res.status(204).json(reponseHandler("success", "Department deleted"));
-        } catch (error) {
-            next(error);
-        }
-    };
+    public deleteDepartment = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const departmentId = Number(req.params.id);
+        await this.departmentService.deleteDepartment(departmentId);
+        res.status(204).json(reponseHandler("success", "Department deleted"));
+    });
 }
 
 export default DepartmentController;

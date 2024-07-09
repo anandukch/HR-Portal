@@ -7,6 +7,7 @@ import { RequestWithUser } from "../utils/requestWithUser";
 import { Role } from "../utils/role.enum";
 import validationMiddleware from "../middleware/validate.middleware";
 import { reponseHandler } from "../utils/reponse.utils";
+import asyncHandler from "../utils/tryCatch.utils";
 
 class EmployeeController {
     public router: Router;
@@ -32,64 +33,44 @@ class EmployeeController {
         }
     };
 
-    public getAllEmployees = async (_: Request, res: Response, next: NextFunction) => {
-        try {
-            const employees = await this.employeeService.getAllEmployees();
-            if (employees.length == 0) throw new HttpException(404, "No employees found");
+    public getAllEmployees = asyncHandler(async (_: Request, res: Response, next: NextFunction) => {
+        const employees = await this.employeeService.getAllEmployees();
+        if (employees.length == 0) throw new HttpException(404, "No employees found");
 
-            res.status(200).send(
-                reponseHandler(
-                    "success",
-                    "Employees found",
-                    employees.map((employee) => new EmployeeResposneDto(employee))
-                )
-            );
-        } catch (error) {
-            next(error);
-        }
-    };
+        res.status(200).send(
+            reponseHandler(
+                "success",
+                "Employees found",
+                employees.map((employee) => new EmployeeResposneDto(employee))
+            )
+        );
+    });
 
-    public getEmployee = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const employeeId = Number(req.params.id);
-            const employee = await this.employeeService.getEmployeeById(employeeId);
-            if (!employee) {
-                throw new HttpException(404, `No employee found with id : ${employeeId}`);
-            }
-            res.status(200).json(reponseHandler("success", "Employee found", new EmployeeResposneDto(employee)));
-        } catch (error) {
-            next(error);
+    public getEmployee = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const employeeId = Number(req.params.id);
+        const employee = await this.employeeService.getEmployeeById(employeeId);
+        if (!employee) {
+            throw new HttpException(404, `No employee found with id : ${employeeId}`);
         }
-    };
+        res.status(200).json(reponseHandler("success", "Employee found", new EmployeeResposneDto(employee)));
+    });
 
-    public createEmployee = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-        try {
-            const newEmployee = await this.employeeService.createEmployee(req.body);
-            res.status(200).json(reponseHandler("success", "Employee created", new EmployeeResposneDto(newEmployee)));
-        } catch (error) {
-            next(error);
-        }
-    };
+    public createEmployee = asyncHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
+        const newEmployee = await this.employeeService.createEmployee(req.body);
+        res.status(200).json(reponseHandler("success", "Employee created", new EmployeeResposneDto(newEmployee)));
+    });
 
-    public updateEmployee = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const updatedEmployeeData = req.body;
-            const employeeId = Number(req.params.id);
-            await this.employeeService.updateEmployee(employeeId, updatedEmployeeData);
-            res.status(200).json(reponseHandler("success", "Employee updated"));
-        } catch (error) {
-            next(error);
-        }
-    };
+    public updateEmployee = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const updatedEmployeeData = req.body;
+        const employeeId = Number(req.params.id);
+        await this.employeeService.updateEmployee(employeeId, updatedEmployeeData);
+        res.status(200).json(reponseHandler("success", "Employee updated"));
+    });
 
-    public deleteEmployee = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            await this.employeeService.deleteEmployee(Number(req.params.id));
-            res.status(204).json(reponseHandler("success", "Employee deleted"));
-        } catch (error) {
-            next(error);
-        }
-    };
+    public deleteEmployee = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        await this.employeeService.deleteEmployee(Number(req.params.id));
+        res.status(204).json(reponseHandler("success", "Employee deleted"));
+    });
 }
 
 export default EmployeeController;
