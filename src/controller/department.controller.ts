@@ -6,7 +6,7 @@ import { Role } from "../utils/role.enum";
 import validationMiddleware from "../middleware/validate.middleware";
 import { CreateDepartmentDto } from "../dto/department.dto";
 import { reponseHandler } from "../utils/reponse.utils";
-import asyncHandler from "../utils/tryCatch.utils";
+import asyncHandler from "../utils/asyncHandler.utils";
 
 class DepartmentController {
     public router: Router;

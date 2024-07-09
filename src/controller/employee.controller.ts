@@ -7,7 +7,7 @@ import { RequestWithUser } from "../utils/requestWithUser";
 import { Role } from "../utils/role.enum";
 import validationMiddleware from "../middleware/validate.middleware";
 import { reponseHandler } from "../utils/reponse.utils";
-import asyncHandler from "../utils/tryCatch.utils";
+import asyncHandler from "../utils/asyncHandler.utils";
 
 class EmployeeController {
     public router: Router;

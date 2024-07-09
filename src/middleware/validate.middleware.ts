@@ -5,7 +5,7 @@ import { validate } from "class-validator";
 import { formatError } from "../utils/formatError.utils";
 
 const validationMiddleware = (dto: any) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, _: Response, next: NextFunction) => {
         try {
             const schema = plainToInstance(dto, req.body);
             const errors = await validate(schema);
