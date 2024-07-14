@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.create_section {
+    margin-top: 20px;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #c9c9c944;
+    box-shadow: 2px 2px #b8b1b144;
+}
+
+section h1 {
+    padding: 10px;
+}
+
+.create_emp_span {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    margin: 10px;
+}
+
+.form_section form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+span label {
+    margin-bottom: 10px;
+}
+
+.side_bar img {
+    background-color: white;
+    padding: 4px;
+    border-radius: 50px;
+    margin-right: 10px;
+}
+
+header img {
+    margin: 10px 0px 10px 40px;
+}
+
+input {
+    padding: 15px 12px;
+    width: 370px;
+    border-radius: 7px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.create_section input:focus,
+select:focus {
+    outline: none;
+    border-color: #03aeee;
+    caret-color: #03aeee;
+}
+
+.create_section select {
+    text-decoration: none;
+    padding: 15px 12px;
+    border-radius: 5px;
+    width: 370px;
+    background-color: #f8f8f800;
+    border: 1px solid rgba(107, 104, 104, 0.562);
+}
+
+.form_item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 10px;
+}
+
+.btn_group {
+    margin: 10px;
+}
+
+/* button {
+    padding: 10px 40px 10px 40px;
+    border-radius: 3px;
+} */
+
+.btn_group button {
+    padding: 16px 50px 16px 50px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px;
+    margin: 15px;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+.btn_confirm {
+    background-color: #03aeee;
+    color: white;
+    border: none;
+    border-color: #03aeee;
+}
+
+.btn_cancel {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 1px solid rgba(107, 104, 104, 0.562);
+}
+
+@media screen and (max-width: 1600px) {
+    .form_item {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: auto;
+        gap: 10px;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    .form_item {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        gap: 10px;
+    }
+}

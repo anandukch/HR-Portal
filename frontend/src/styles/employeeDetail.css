@@ -1,0 +1,37 @@
+.emp_detail {
+    margin-top: 20px;
+    background-color: rgb(255, 255, 255);
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid #c9c9c944;
+    box-shadow: 2px 2px #b8b1b144;
+}
+
+.emp_detail .emp_container {
+    display: flex;
+    padding: 12px;
+}
+
+.emp_container span {
+    padding: 4px;
+}
+
+.top {
+    border-bottom: 1px solid rgba(80, 80, 80, 0.199);
+
+    justify-content: space-between;
+    margin-right: 30px;
+}
+
+.emp_container .title {
+    /* font-size: 12px; */
+    color: rgba(116, 116, 116, 0.884);
+}
+
+.down {
+    gap: 200px;
+}
+
+.edit_emp_btn img {
+    width: 12px;
+}

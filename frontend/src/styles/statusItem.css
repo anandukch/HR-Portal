@@ -1,0 +1,11 @@
+.status_item {
+    border-radius: 20px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.on_emp_detail{
+    padding: 0pc 12px 0px 12px;
+}
