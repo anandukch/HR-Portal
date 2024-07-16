@@ -28,6 +28,12 @@ class Employee extends AbstractEntity {
     @Column({ nullable: true })
     role: Role;
 
+    @Column({ nullable: true })
+    status: string;
+
+    @Column({ nullable: true })
+    experience: number;
+
     @OneToMany(()=> EmployeeDepartment, (employeeDepartment) => employeeDepartment.employee)
     employeeDepartments: EmployeeDepartment[];
 

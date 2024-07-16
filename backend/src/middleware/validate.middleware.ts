@@ -7,8 +7,6 @@ import { formatError } from "../utils/formatError.utils";
 const validationMiddleware = (dto: any) => {
     return async (req: Request, _: Response, next: NextFunction) => {
         try {
-            console.log("dto", req.body);
-            
             const schema = plainToInstance(dto, req.body);
             const errors = await validate(schema);
             if (errors.length) {

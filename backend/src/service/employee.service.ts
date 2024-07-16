@@ -1,4 +1,3 @@
-
 import { CreateEmployeeDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import Address from "../entity/address.entity";
 import Employee from "../entity/employee.entity";
@@ -33,15 +32,15 @@ class EmployeeService {
     };
 
     createEmployee = async (employee: CreateEmployeeDto): Promise<Employee> => {
-        const { name, email, address, age, departmentId, password, role } = employee;
+        const { name, email, address, age, departmentName, password, role, status, experience } = employee;
         const newEmployee = new Employee();
         newEmployee.name = name;
         newEmployee.email = email;
         newEmployee.age = age;
-
         newEmployee.password = password ? await bcrypt.hash(password, 10) : "";
-
         newEmployee.role = role;
+        newEmployee.status = status;
+        newEmployee.experience = experience;
 
         const newAddress = new Address();
         newAddress.line1 = address.line1;
@@ -49,9 +48,9 @@ class EmployeeService {
 
         newEmployee.address = newAddress;
 
-        const department = await this.departmentService.getDepartmentById(departmentId);
+        const department = await this.departmentService.getDepartmentByName(departmentName);
         if (!department) {
-            throw new HttpException(404, `No department found with id : ${departmentId}`);
+            throw new HttpException(404, `No department found with name : ${departmentName}`);
         }
         await this.employeeRespository.save(newEmployee);
         const employeeDepartment = new EmployeeDepartment();
@@ -66,34 +65,38 @@ class EmployeeService {
         if (!employeeToUpdate) {
             throw new HttpException(404, `No employee found with id :${id}`);
         }
+        console.log(employee);
+        
         employeeToUpdate.name = employee.name;
         employeeToUpdate.email = employee.email;
         employeeToUpdate.age = employee.age;
+        employeeToUpdate.role = employee.role;
+        employeeToUpdate.status = employee.status;
+        employeeToUpdate.experience = employee.experience;
         if (employee.address) {
             employeeToUpdate.address.line1 = employee.address.line1;
             employeeToUpdate.address.pincode = employee.address.pincode;
         }
         await this.employeeRespository.save(employeeToUpdate);
-        if (employee.departmentId) {
-            const department = await this.departmentService.getDepartmentById(employee.departmentId);
+        if (employee.departmentName) {
+            const department = await this.departmentService.getDepartmentByName(employee.departmentName);
             if (!department) {
-                throw new HttpException(404, `No department found with id :${employee.departmentId}`);
+                throw new HttpException(404, `No department found with id :${employee.departmentName}`);
             }
             const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee_id: id });
 
-            if (employeeDepartment.department_id == employee.departmentId) {
-                throw new HttpException(400, `Employee is already assigned to this department`);
+            if (employeeDepartment.department_id != department.id) {
+                // throw new HttpException(400, `Employee is already assigned to this department`);
+                // updating the end date of the current employee department
+                employeeDepartment.endDate = new Date();
+                await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
+
+                // creating new employee department
+                const newEmployeeDepartment = new EmployeeDepartment();
+                newEmployeeDepartment.department = department;
+                newEmployeeDepartment.employee = employeeToUpdate;
+                await this.employeeDepartmentService.saveEmployeeDepartment(newEmployeeDepartment);
             }
-
-            // updating the end date of the current employee department
-            employeeDepartment.endDate = new Date();
-            await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
-
-            // creating new employee department
-            const newEmployeeDepartment = new EmployeeDepartment();
-            newEmployeeDepartment.department = department;
-            newEmployeeDepartment.employee = employeeToUpdate;
-            await this.employeeDepartmentService.saveEmployeeDepartment(newEmployeeDepartment);
         }
         return employeeToUpdate;
     };

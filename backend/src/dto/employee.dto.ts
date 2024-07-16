@@ -33,8 +33,16 @@ export class CreateEmployeeDto {
     role: Role;
 
     @IsNotEmpty()
+    @IsString()
+    departmentName: string;
+
+    @IsNotEmpty()
     @IsNumber()
-    departmentId: number;
+    experience: number;
+
+    @IsNotEmpty()
+    @IsString()
+    status: string;
 }
 
 export class UpdateEmployeeDto {
@@ -61,8 +69,16 @@ export class UpdateEmployeeDto {
     role: Role;
 
     @IsOptional()
+    @IsString()
+    departmentName: string;
+
+    @IsOptional()
     @IsNumber()
-    departmentId: number;
+    experience: number;
+
+    @IsOptional()
+    @IsString()
+    status: string;
 }
 
 export class EmployeeIdDto {

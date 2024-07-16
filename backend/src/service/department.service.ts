@@ -12,6 +12,9 @@ class DepartmentService {
     getDepartmentById = async (id: number) => {
         return this.departmentRepository.findOneBy({ id });
     };
+    getDepartmentByName = async (name: string) => {
+        return this.departmentRepository.findOneBy({ name });
+    }
 
     createDepartment = async (name: string) => {
         const existingDepartment = await this.departmentRepository.findOneBy({ name });

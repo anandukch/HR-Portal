@@ -3,4 +3,7 @@ export enum Role {
     UX = "UX",
     DEVELOPER = "Developer",
     HR = "HR",
+    TESTER = "Tester",
+    FULLSTACK = "Full Stack",
+    BACKEND = "Backend",
 }
