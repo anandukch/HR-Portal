@@ -63,9 +63,6 @@ export class UpdateEmployeeDto {
     @IsOptional()
     @IsNumber()
     departmentId: number;
-
-
-
 }
 
 export class EmployeeIdDto {

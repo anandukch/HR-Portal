@@ -15,7 +15,7 @@ class DepartmentController {
         this.router = Router();
         this.router.get("/", this.getAllDepartments);
         this.router.get("/:id", this.getDepartment);
-        this.router.post("/", authorize([Role.HR]), validationMiddleware(CreateDepartmentDto), this.createDepartment);
+        this.router.post("/",  validationMiddleware(CreateDepartmentDto), this.createDepartment);
         this.router.put("/:id", authorize([Role.HR]), validationMiddleware(CreateDepartmentDto), this.updateDepartment);
         this.router.delete("/:id", authorize([Role.HR]), this.deleteDepartment);
     }

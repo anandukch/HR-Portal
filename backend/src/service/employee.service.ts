@@ -1,26 +1,27 @@
-import dataSource from "../db/dataSource.db";
+
 import { CreateEmployeeDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import Address from "../entity/address.entity";
-import Department from "../entity/department.entity";
 import Employee from "../entity/employee.entity";
 import EmployeeDepartment from "../entity/employeeDepartment.entity";
 import HttpException from "../exceptions/http.exceptions";
-import DepartmentRepository from "../repository/department.repository";
 import EmployeeRepository from "../repository/employee.repository";
-import EmployeeDepartmentRepository from "../repository/employeeDepartment.repository";
 import { JWT_SECRET, JWT_VALIDITY } from "../utils/constants";
+import bcrypt from "bcryptjs";
 import { jwtPayload } from "../utils/jwtPayload.type";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import DepartmentService from "./department.service";
 import EmployeeDepartmentService from "./employeeDepartment.service";
 
 class EmployeeService {
-    private employeeDepartmentService: EmployeeDepartmentService;
-    constructor(private employeeRespository: EmployeeRepository, private departmentService: DepartmentService) {
-        this.employeeDepartmentService = new EmployeeDepartmentService(
-            new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment))
-        );
+    // private employeeDepartmentService: EmployeeDepartmentService;
+    constructor(
+        private employeeRespository: EmployeeRepository,
+        private departmentService: DepartmentService,
+        private employeeDepartmentService: EmployeeDepartmentService
+    ) {
+        // this.employeeDepartmentService = new EmployeeDepartmentService(
+        //     new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment))
+        // );
     }
 
     getAllEmployees = async (): Promise<Employee[]> => {
@@ -37,7 +38,9 @@ class EmployeeService {
         newEmployee.name = name;
         newEmployee.email = email;
         newEmployee.age = age;
+
         newEmployee.password = password ? await bcrypt.hash(password, 10) : "";
+
         newEmployee.role = role;
 
         const newAddress = new Address();
@@ -111,7 +114,7 @@ class EmployeeService {
             role: employee.role,
         };
         const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_VALIDITY });
-        return { token };
+        return token;
     };
 }
 

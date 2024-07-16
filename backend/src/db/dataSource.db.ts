@@ -14,7 +14,9 @@ const dataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     extra: { max: 5, min: 2 },
     synchronize: false,
-    logging: NODE_ENV == "dev" ? false : true,
+    // logging: NODE_ENV == "dev" ? false : true,
+    logging: true,
+
     namingStrategy: new SnakeNamingStrategy(),
     entities: NODE_ENV == "dev" ? ["src/entity/*.ts"] : ["dist/entity/*.js"],
     migrations: ["dist/db/migrations/*.js"],

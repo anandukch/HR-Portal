@@ -8,10 +8,11 @@ import dataSource from "./db/dataSource.db";
 import employeeRouter from "./routes/employee.routes";
 import errorMiddleware from "./middleware/error.middleware";
 import departmentRouter from "./routes/department.routes";
+import cors from "cors";
 
 const server = express();
 server.use(bodyParser.json());
-
+server.use(cors())
 server.use(loggerMiddleWare);
 
 server.get("/", (req: Request, res: Response) => {

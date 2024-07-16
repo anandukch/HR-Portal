@@ -14,16 +14,13 @@ describe("Department service", () => {
         };
 
         departmentRepository = new DepartmentRepository(dataSource.getRepository(Department)) as jest.Mocked<DepartmentRepository>;
-        departmentService = new DepartmentService(
-            new DepartmentRepository(dataSource.getRepository(Department)) as jest.Mocked<DepartmentRepository>
-        );
         departmentService = new DepartmentService(departmentRepository);
     });
 
     it("should return all departments", async () => {
         const mock = jest.fn(departmentRepository.find).mockResolvedValue([]);
         departmentRepository.find = mock;
-        const departments = await departmentRepository.find();
+        const departments = await departmentService.getAllDepartments();
         expect(departments).toEqual([]);
         expect(mock).toHaveBeenCalledTimes(1);
     });
@@ -63,7 +60,9 @@ describe("Department service", () => {
 
     it("should update a department", async () => {
         const mock = jest.fn();
-        when(mock).calledWith(1).mockResolvedValue({ id: 1, name: "test" } as Department);
+        when(mock)
+            .calledWith(1)
+            .mockResolvedValue({ id: 1, name: "test" } as Department);
         departmentService.getDepartmentById = mock;
 
         const saveMock = jest.fn();
@@ -75,17 +74,38 @@ describe("Department service", () => {
         expect(mock).toHaveBeenCalledTimes(1);
     });
 
-    it("should return error on update a department", async () => {
+    it("should update the given department", async () => {
         const mock = jest.fn();
-        when(mock).calledWith(1).mockResolvedValue(null);
+        when(mock)
+            .calledWith(1)
+            .mockResolvedValue({ id: 1, name: "test" } as Department);
         departmentService.getDepartmentById = mock;
 
         const saveMock = jest.fn();
         when(saveMock).mockResolvedValue({ name: "test" });
         departmentRepository.save = saveMock;
-        const reposne = await departmentService.updateDepartment(1, { name: "test" });
-        expect(reposne).toEqual({ name: "test" });
+
+        const response = await departmentService.updateDepartment(1, { name: "test" });
+        expect(response).toEqual({ name: "test" });
         expect(saveMock).toHaveBeenCalledTimes(1);
+        expect(mock).toHaveBeenCalledTimes(1);
+    });
+
+    it("should delete the given department", async () => {
+        const mock = jest.fn();
+        when(mock)
+            .calledWith(1)
+            .mockResolvedValue({ id: 1, name: "test" } as Department);
+        departmentService.getDepartmentById = mock;
+
+        jest.spyOn(departmentService, "getDepartmentEmployees").mockResolvedValue([]);
+        const softDeleteMock = jest.fn();
+        when(softDeleteMock).mockResolvedValue({ name: "test" });
+        departmentRepository.softDelete = softDeleteMock;
+
+        const response = await departmentService.deleteDepartment(1);
+        expect(response).toEqual({ name: "test" });
+        expect(softDeleteMock).toHaveBeenCalledTimes(1);
         expect(mock).toHaveBeenCalledTimes(1);
     });
 });
