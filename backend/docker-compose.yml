@@ -7,7 +7,7 @@ services:
       context: .
     container_name: kv-hr-backend
     env_file:
-      - docker.env
+      - local.env
     volumes:
       - .:/app
       - /app/node_modules
