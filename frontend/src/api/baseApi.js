@@ -11,15 +11,12 @@ export const employeeBaseApi = createApi({
             }
             return headers;
         },
-        
     }),
-
     endpoints: () => ({}),
-    
 });
 
 const apiWithTag = employeeBaseApi.enhanceEndpoints({
-    addTagTypes: [],
+    addTagTypes: ["EMPLOYEE_LIST", "EMPLOYEE"],
 });
 
 export default apiWithTag;

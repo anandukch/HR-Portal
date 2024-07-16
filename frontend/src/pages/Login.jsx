@@ -24,7 +24,6 @@ export const Login = () => {
 
         if (isError) {
             alert(error.data.message);
-            
         }
     }, [isSuccess, data, navigate, error, isError]);
 
@@ -46,12 +45,11 @@ export const Login = () => {
         userNameRef.current.focus();
     }, [login]);
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
         login({ email: username, password });
     };
 
-    
     return (
         <main className="login_main">
             <div className="hero">

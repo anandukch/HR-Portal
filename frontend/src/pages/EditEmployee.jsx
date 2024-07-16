@@ -3,29 +3,43 @@ import "../styles/createEmployee.css";
 import { useEffect, useState } from "react";
 import { EmployeeForm } from "../components/EmployeeForm";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { editEmployee } from "../store/employeeReducer";
+import { useGetEmployeeQuery, useUpdateEmployeeMutation } from "../api/employeeApi";
 
 export const EditEmployee = () => {
     const { id } = useParams();
     // const  { state, dispatch }=  useOutletContext()
-    const state = useSelector((state) => state.employee);
-    const dispatch = useDispatch();
+    // const state = useSelector((state) => state.employee);
+    // const dispatch = useDispatch();
     const [employeeData, setEmployeeData] = useState({});
     const navigate = useNavigate();
-    const employee = state.employees.find((employee) => employee.id === id);
+    // const employee = state.employees.find((employee) => employee.id === id);
+
+    const { data } = useGetEmployeeQuery(id);
+
+    const [updateEmployee, { isSuccess: updateSuccess }] = useUpdateEmployeeMutation();
     useEffect(() => {
-        setEmployeeData(() => ({
-            name: employee.name,
-            id: employee.id,
-            joiningDate: new Date(employee.joiningDate).toISOString().split("T")[0],
-            role: employee.role,
-            status: employee.status,
-            experience: employee.experience,
-            department: employee.department,
-            address: employee.address,
-        }));
-    }, [employee]);
+        if (data) {
+            const employee = data.data;
+            setEmployeeData(() => ({
+                name: employee.name,
+                id: employee.id,
+                joiningDate: new Date(employee.createdAt).toISOString().split("T")[0],
+                role: employee.role,
+                status: employee.status,
+                experience: employee.experience,
+                department: employee.employeeDepartments[0].department.name,
+                address: employee.address.line1,
+                email: employee.email,
+                age: employee.age,
+            }));
+        }
+    }, [data]);
+
+    useEffect(() => {
+        if (updateSuccess) {
+            navigate("/employees");
+        }
+    }, [navigate, updateSuccess]);
 
     const onClickHandler = (e) => {
         e.preventDefault();
@@ -33,8 +47,21 @@ export const EditEmployee = () => {
         //     if (employee.id == id) employeeList[i] = employeeData;
         // });
 
-        dispatch(editEmployee(employeeData));
-        navigate("/employees");
+        // dispatch(editEmployee(employeeData));
+        // console.log(employeeData);
+        const payload = {
+            ...employeeData,
+            address: {
+                line1: employeeData.address,
+                // pincode: "123456",
+            },
+            departmentName: employeeData.department,
+            age: parseInt(employeeData.age),
+            experience: parseInt(employeeData.experience),
+        };
+        updateEmployee(payload);
+
+        // navigate("/employees");
     };
 
     const formChangeHandler = (e) => {

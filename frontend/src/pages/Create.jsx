@@ -1,42 +1,54 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import "../styles/createEmployee.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EmployeeForm } from "../components/EmployeeForm";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { isDataEmpty } from "../utils/formCheck";
 import { useDispatch } from "react-redux";
 import { addEmployee } from "../store/employeeReducer";
+import { useAddEmployeeMutation } from "../api/employeeApi";
 
 const initalData = {
     name: "",
     joiningDate: "",
     role: "",
     status: "",
-    experience: "",
+    experience: 0,
     address: "",
+    email: "",
+    password: "",
+    age: 0,
+    department: "",
 };
 export const CreateEmployee = () => {
-    // const  { state, dispatch }=  useOutletContext()
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initalData);
-    const dispatch =  useDispatch();
 
+    const [addEmployee, { data, isSuccess }] = useAddEmployeeMutation();
+
+    useEffect(() => {
+        if (isSuccess) {
+            navigate("/employees");
+        }
+    }, [isSuccess, data, navigate]);
     const onClickHandler = (e) => {
         e.preventDefault();
         if (isDataEmpty(formData)) {
             alert("Form fields empty");
-            setFormData(initalData);
-            return
+            return;
         }
-        const idx = Math.random().toString(16).slice(2);
-        formData.id = idx;
-
-        dispatch(addEmployee(formData));
-        // dispatch({ type: "ADD_EMPLOYEE", payload: formData });
-        
-        
-        navigate("/employees");
+        const payload = {
+            ...formData,
+            address: {
+                line1: formData.address,
+                pincode: "123456",
+            },
+            departmentName: formData.department,
+            age: parseInt(formData.age),
+            experience: parseInt(formData.experience),
+        };
+        addEmployee(payload);
     };
 
     const formChangeHandler = (e) => {

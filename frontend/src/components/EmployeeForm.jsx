@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import { SelectField } from "./SelectField";
 import { TextField } from "./TextField";
@@ -12,7 +13,7 @@ export const EmployeeForm = ({ formData, formChangeHandler, onClickHandler, edit
         },
         {
             label: "Department",
-            options: ["Software", "Testing", "HR"],
+            options: ["Development", "Testing", "HR"],
             name: "department",
         },
         {
@@ -27,7 +28,7 @@ export const EmployeeForm = ({ formData, formChangeHandler, onClickHandler, edit
         },
         {
             label: "Role",
-            options: ["HR", "UI", "Full Stack", "Backend"],
+            options: ["HR", "UI", "Full Stack", "Backend", "Tester"],
             name: "role",
         },
         {
@@ -45,14 +46,37 @@ export const EmployeeForm = ({ formData, formChangeHandler, onClickHandler, edit
             type: "text",
             name: "address",
         },
+        {
+            label: "Email",
+            type: "text",
+            name: "email",
+        },
+        {
+            label: "Password",
+            type: "text",
+            name: "password",
+        },
+        {
+            label: "Age",
+            type: "number",
+            name: "age",
+        }
     ];
     if (edit) {
         fields[3].disabled = true;
+        fields.splice(9, 1);
     } else {
         fields.splice(3, 1);
+        
+    }
+    const navigate = useNavigate();
+    const onCancel = () => {
+        navigate("/employees");
     }
     return (
         <>
+
+
             <form action="">
                 <div className="form_item">
                     {fields.map((field) => {
@@ -83,7 +107,7 @@ export const EmployeeForm = ({ formData, formChangeHandler, onClickHandler, edit
 
                 <div className="btn_group">
                     <Button text="Confirm" className="btn_confirm" onClickHandler={onClickHandler} />
-                    <Button text="Cancel" className="btn_cancel" />
+                    <Button text="Cancel" className="btn_cancel" onClickHandler={onCancel}/>
                 </div>
             </form>
         </>

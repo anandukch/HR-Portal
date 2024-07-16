@@ -2,30 +2,49 @@
 /* eslint-disable react/jsx-key */
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/employeeDetail.css";
-import {  formFields } from "../utils/employees";
+import { formFields } from "../utils/employees";
 import EditIcon from "../assets/pencil.png";
 import { StatusItem } from "../components/StatusItem";
 import { statusColor } from "../utils/statusColorMap";
-import { useSelector } from "react-redux";
+import { useGetEmployeeQuery } from "../api/employeeApi";
+import { useEffect, useState } from "react";
 
 export const EmployeeDetail = () => {
     const { id } = useParams();
-    // const  { state, dispatch }=  useOutletContext()
-    const state = useSelector((state) => state.employee);
-    const employee = state.employees.find((employee) => employee.id === id);   
+    const [employee, setEmployee] = useState({});
     const fields = formFields;
     const navigate = useNavigate();
-    if (!employee) {
-        return <h1>Employee not found</h1>;
-    }
+
+    const { data } = useGetEmployeeQuery(id);
+
+    useEffect(() => {
+        if (data) {
+            const resData = data.data;
+            console.log(resData);
+            setEmployee({
+                id: resData.id,
+                name: resData.name,
+                email: resData.email,
+                role: resData.role,
+                status: resData.status,
+                experience: resData.experience,
+                department: resData.employeeDepartments[0].department.name,
+                address: resData.address.line1,
+                joiningDate: new Date(resData.createdAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                }),
+            });
+        }
+    }, [data]);
+
     const editClickHandler = () => {
         navigate(`/employees/edit/${id}`);
     };
 
-    
     return (
         <>
-        
             <section className="list_section">
                 <h1>Employee Detail</h1>
                 <div className="list_right">
@@ -40,11 +59,11 @@ export const EmployeeDetail = () => {
             <div className="emp_detail">
                 <div className="emp_container top">
                     {fields.slice(0, 6).map((field) => {
-                        if (field.name=="status") {
+                        if (field.name == "status") {
                             return (
                                 <div key={field.name}>
                                     <span className="title">{field.label}</span>
-                                    <StatusItem text={employee[field.name]} bgColor={statusColor[employee.status]}/>
+                                    <StatusItem text={employee[field.name]} bgColor={statusColor[employee.status]} />
                                 </div>
                             );
                         }
@@ -60,7 +79,7 @@ export const EmployeeDetail = () => {
                 <div className="emp_container down">
                     {fields.slice(6, 8).map((field) => {
                         return (
-                            <div key={field.name} >
+                            <div key={field.name}>
                                 <span className="title">{field.label}</span>
                                 <span className="value">{employee[field.name]}</span>
                             </div>
