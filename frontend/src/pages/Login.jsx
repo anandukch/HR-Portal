@@ -5,31 +5,53 @@ import { TextField } from "../components/TextField";
 import { Button } from "../components/Button";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../api/loginApi";
 
 // eslint-disable-next-line react/prop-types
 export const Login = () => {
     const [username, setUsername] = useState("");
-    const [error, setError] = useState(false);
+    const [password, setPassword] = useState("");
+    const [err, setErr] = useState(false);
     const userNameRef = useRef();
     const navigate = useNavigate();
+    const [login, { isSuccess, data, isError, error }] = useLoginMutation();
+
+    useEffect(() => {
+        if (isSuccess && data.data.token) {
+            localStorage.setItem("token", data.data.token);
+            navigate("/employees");
+        }
+
+        if (isError) {
+            alert(error.data.message);
+            
+        }
+    }, [isSuccess, data, navigate, error, isError]);
+
     const onUsernameChange = (e) => {
         const text = e.target.value;
-        if (text.length > 10) {
-            setError(true);
+        if (text.length > 100) {
+            setErr(true);
         } else {
-            setError(false);
+            setErr(false);
             setUsername(text);
         }
     };
 
+    const onPasswordChange = (e) => {
+        setPassword(e.target.value);
+    };
+
     useEffect(() => {
         userNameRef.current.focus();
-    }, []);
+    }, [login]);
 
-    const handleLogin = () => {
-        localStorage.setItem("token", true);
-        navigate("/employees");
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        login({ email: username, password });
     };
+
+    
     return (
         <main className="login_main">
             <div className="hero">
@@ -47,9 +69,9 @@ export const Login = () => {
                         type="text"
                         onChange={onUsernameChange}
                         value={username}
-                        error={error && "Username should be less then 10 characters"}
+                        error={err && "Username should be less then 10 characters"}
                     />
-                    <TextField label="Password" type="password" />
+                    <TextField label="Password" type="password" onChange={onPasswordChange} />
 
                     <Button text="Login In" onClickHandler={handleLogin} />
                 </form>

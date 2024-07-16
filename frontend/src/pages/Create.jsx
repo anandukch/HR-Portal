@@ -1,9 +1,12 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import "../styles/createEmployee.css";
 import { useState } from "react";
 import { EmployeeForm } from "../components/EmployeeForm";
-import { employeeList } from "../utils/employees";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { isDataEmpty } from "../utils/formCheck";
+import { useDispatch } from "react-redux";
+import { addEmployee } from "../store/employeeReducer";
 
 const initalData = {
     name: "",
@@ -14,8 +17,10 @@ const initalData = {
     address: "",
 };
 export const CreateEmployee = () => {
+    // const  { state, dispatch }=  useOutletContext()
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initalData);
+    const dispatch =  useDispatch();
 
     const onClickHandler = (e) => {
         e.preventDefault();
@@ -26,7 +31,11 @@ export const CreateEmployee = () => {
         }
         const idx = Math.random().toString(16).slice(2);
         formData.id = idx;
-        employeeList.push(formData);
+
+        dispatch(addEmployee(formData));
+        // dispatch({ type: "ADD_EMPLOYEE", payload: formData });
+        
+        
         navigate("/employees");
     };
 

@@ -32,7 +32,7 @@ export const EmployeeForm = ({ formData, formChangeHandler, onClickHandler, edit
         },
         {
             label: "Status",
-            options: ["Active", "Inactive", "Probation"],
+            options: ["Active", "InActive", "Probation"],
             name: "status",
         },
         {
@@ -49,8 +49,6 @@ export const EmployeeForm = ({ formData, formChangeHandler, onClickHandler, edit
     if (edit) {
         fields[3].disabled = true;
     } else {
-        // const index = fields.findIndex((field) => field.name === "id");
-
         fields.splice(3, 1);
     }
     return (

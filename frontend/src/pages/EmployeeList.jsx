@@ -1,34 +1,52 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 import { useNavigate } from "react-router-dom";
 import { EmployeeItem } from "../components/EmployeeItem";
 import "../styles/employeeList.css";
-import {  useState } from "react";
-import { employeeList } from "../utils/employees";
+import { useEffect, useState } from "react";
 import { DeletePopUp } from "../components/DeletePopUp";
+import { useDispatch, useSelector } from "react-redux";
+import { addEmployee, addFilter, deleteEmployee } from "../store/employeeReducer";
 
 export const EmployeeList = () => {
+    // const { state, dispatch } = useOutletContext();
+
+    const state = useSelector((state) => state.employee);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [employees, setEmployees] = useState(employeeList);
+    const [employees, setEmployees] = useState(state.employees);
     const [showDelete, setShowDelete] = useState(false);
     const [selectedEmpId, setSelectedEmpId] = useState(null);
+    // console.log(state.employees);
+
+    useEffect(() => {
+        const filterEmployees = state.filterBy == "all" ? state.employees : state.employees.filter((employee) => employee.status === state.filterBy);
+        setEmployees(filterEmployees);
+    }, [state.employees, state.filterBy]);
 
     const clickHandler = () => {
         navigate("/employees/create");
     };
 
     const filterHandler = (e) => {
-        if (e.target.value === "all") {
-            setEmployees(employeeList);
-        } else {
-            setEmployees(employees.filter((employee) => employee.status === e.target.value));
-        }
+        dispatch(addFilter(e.target.value));
+        // if (e.target.value === "all") {
+        //     // dispatch({ type: "ALL_EMPLOYEE" });
+        //     setEmployees(state.employees);
+        // } else {
+        //     // setEmployees(employeeList.filter((employee) => employee.status === e.target.value));
+        //     // dispatch({ type: "FILTER_EMPLOYEE", payload: e.target.value });
+        //     setEmployees(state.employees.filter((employee) => employee.status === e.target.value));
+        // }
     };
 
     const deleteHandler = (id) => {
-        employeeList.forEach((employee, i) => {
-            if (employee.id == id) employeeList.splice(i, 1);
-        });
-        setEmployees(employees.filter((employee) => employee.id != id));
+        // employeeList.forEach((employee, i) => {
+        //     if (employee.id == id) employeeList.splice(i, 1);
+        // });
+        // setEmployees(employees.filter((employee) => employee.id != id));
+        // dispatch({ type: "DELETE_EMPLOYEE", payload: id });
+        dispatch(deleteEmployee(id));
         setShowDelete(false);
     };
 
@@ -55,7 +73,7 @@ export const EmployeeList = () => {
                             <option value="all">All</option>
                             <option value="Probation">Probation</option>
                             <option value="Active">Active</option>
-                            <option value="InActive">In Active</option>
+                            <option value="InActive">InActive</option>
                         </select>
                     </span>
 
@@ -76,21 +94,22 @@ export const EmployeeList = () => {
                     <h4>Experience</h4>
                     <h4>Action</h4>
                 </div>
-                {employees.map((employee) => {
-                    return (
-                        <EmployeeItem
-                        key={employee.id}
-                            employee={employee}
-                            clickHandler={() => {
-                                onEmployeeClick(employee.id);
-                            }}
-                            deleteHandler={() => {
-                                setSelectedEmpId(employee.id);
-                                setShowDelete(true);
-                            }}
-                        />
-                    );
-                })}
+                {state.employees &&
+                    employees.map((employee) => {
+                        return (
+                            <EmployeeItem
+                                key={employee.id}
+                                employee={employee}
+                                clickHandler={() => {
+                                    onEmployeeClick(employee.id);
+                                }}
+                                deleteHandler={() => {
+                                    setSelectedEmpId(employee.id);
+                                    setShowDelete(true);
+                                }}
+                            />
+                        );
+                    })}
             </section>
         </>
     );

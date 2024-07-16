@@ -1,21 +1,31 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/employeeDetail.css";
-import { employeeList, formFields } from "../utils/employees";
+import {  formFields } from "../utils/employees";
 import EditIcon from "../assets/pencil.png";
 import { StatusItem } from "../components/StatusItem";
 import { statusColor } from "../utils/statusColorMap";
+import { useSelector } from "react-redux";
 
 export const EmployeeDetail = () => {
     const { id } = useParams();
-    const employee = employeeList.find((employee) => employee.id === id);
+    // const  { state, dispatch }=  useOutletContext()
+    const state = useSelector((state) => state.employee);
+    const employee = state.employees.find((employee) => employee.id === id);   
     const fields = formFields;
     const navigate = useNavigate();
+    if (!employee) {
+        return <h1>Employee not found</h1>;
+    }
     const editClickHandler = () => {
         navigate(`/employees/edit/${id}`);
     };
+
+    
     return (
         <>
+        
             <section className="list_section">
                 <h1>Employee Detail</h1>
                 <div className="list_right">

@@ -6,6 +6,9 @@ import { HomeLayout } from "./layouts/HomeLayout";
 import { EmployeeList } from "./pages/EmployeeList";
 import { EditEmployee } from "./pages/EditEmployee";
 import { EmployeeDetail } from "./pages/EmployeeDetails";
+import { Provider } from "react-redux";
+import store from "./store/store";
+
 const App = () => {
     const router = createBrowserRouter([
         {
@@ -29,16 +32,16 @@ const App = () => {
                 },
                 {
                     path: ":id",
-                    element: <EmployeeDetail/>
-                }
+                    element: <EmployeeDetail />,
+                },
             ],
         },
     ]);
 
     return (
-        <>
+        <Provider store={store}>
             <RouterProvider router={router} />
-        </>
+        </Provider>
     );
 };
 

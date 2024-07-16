@@ -10,18 +10,18 @@ export const employeeList = [
         department:"HR"
     },
     {
-        name: "Arun",
+        name: "Arjun",
         id: "2",
         joiningDate: "2024-07-09",
         role: "Full Stack",
         status: "Probation",
-        experience: 5,
+        experience: 3,
         address: "Chennai",
         department:"HR"
 
     },
     {
-        name: "Arun",
+        name: "Ben",
         id: "3",
         joiningDate: "2024-07-09",
         role: "Full Stack",
@@ -32,23 +32,23 @@ export const employeeList = [
 
     },
     {
-        name: "Arun",
+        name: "Anandu",
         id: "4",
         joiningDate: "2024-07-09",
         role: "Full Stack",
         status: "Probation",
-        experience: 5,
+        experience: 2,
         address: "Chennai",
         department:"Developement"
 
     },
     {
-        name: "Arun",
+        name: "Amal",
         id: "5",
         joiningDate: "2024-07-09",
         role: "Full Stack",
         status: "InActive",
-        experience: 5,
+        experience: 1,
         address: "Chennai",
         department:"Testing"
 

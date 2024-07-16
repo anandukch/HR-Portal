@@ -27,10 +27,9 @@
     padding-left: 50px;
 }
 
-.employee_filter select option{
+.employee_filter select option {
     padding: 20px;
-}   
-
+}
 
 .list_right {
     display: flex;
@@ -64,7 +63,6 @@
     border-bottom-right-radius: 30px;
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
-
 }
 
 /*  */
@@ -80,9 +78,12 @@
 
 .employee_content {
     background-color: rgb(255, 255, 255);
-
     border: 1px solid #c9c9c944;
     box-shadow: 2px 2px #b8b1b144;
+}
+
+.employee_content:hover {
+    background-color: #f5f5f5;
 }
 
 .employee_head {
@@ -101,8 +102,6 @@
 .probation {
     background-color: #d8a457;
 }
-
-
 
 .class_action {
     margin-left: 50px;
