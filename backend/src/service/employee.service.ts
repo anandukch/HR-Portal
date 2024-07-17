@@ -12,12 +12,21 @@ import DepartmentService from "./department.service";
 import EmployeeDepartmentService from "./employeeDepartment.service";
 
 class EmployeeService {
-    // private employeeDepartmentService: EmployeeDepartmentService;
-    constructor(
-        private employeeRespository: EmployeeRepository,
-        private departmentService: DepartmentService,
-        private employeeDepartmentService: EmployeeDepartmentService
-    ) {}
+    constructor(private employeeRespository: EmployeeRepository, private departmentService: DepartmentService) {}
+
+    getMe = async (name: string, email: string): Promise<Employee> => {
+        return this.employeeRespository.findOneBy({
+            name,
+            email,
+        });
+    };
+
+    resetPassword = async (employee: Employee, currentPassword: string, newPassword: string) => {
+        const result = await bcrypt.compare(currentPassword, employee.password);
+        if (!result) throw new HttpException(401, "Invalid Credentials");
+        employee.password = await bcrypt.hash(newPassword, 10);
+        await this.employeeRespository.save(employee);
+    };
 
     getAllEmployees = async (): Promise<Employee[]> => {
         return this.employeeRespository.find();
@@ -25,7 +34,6 @@ class EmployeeService {
 
     getEmployeeById = async (id: number): Promise<any> => {
         const employee = await this.employeeRespository.findOneBy({ id });
-        // const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee_id: id, endDate: null });
         return employee;
     };
 
@@ -53,10 +61,6 @@ class EmployeeService {
 
         newEmployee.department = department;
         await this.employeeRespository.save(newEmployee);
-        // const employeeDepartment = new EmployeeDepartment();
-        // employeeDepartment.department = department;
-        // employeeDepartment.employee = newEmployee;
-        // await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
         return newEmployee;
     };
 
@@ -79,27 +83,6 @@ class EmployeeService {
         }
         await this.employeeRespository.save(employeeToUpdate);
 
-        // if (employee.departmentName) {
-        //     const department = await this.departmentService.getDepartmentByName(employee.departmentName);
-        //     if (!department) {
-        //         throw new HttpException(404, `No department found with id :${employee.departmentName}`);
-        //     }
-        //     const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee_id: id });
-        //     // console.log(employeeDepartment.department_id, department.id);
-
-        //     if (employeeDepartment.department_id != department.id) {
-        //         // throw new HttpException(400, `Employee is already assigned to this department`);
-        //         // updating the end date of the current employee department
-        //         employeeDepartment.endDate = new Date();
-        //         await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
-
-        //         // creating new employee department
-        //         const newEmployeeDepartment = new EmployeeDepartment();
-        //         newEmployeeDepartment.department = department;
-        //         newEmployeeDepartment.employee = employeeToUpdate;
-        //         await this.employeeDepartmentService.saveEmployeeDepartment(newEmployeeDepartment);
-        //     }
-        // }
         return employeeToUpdate;
     };
 

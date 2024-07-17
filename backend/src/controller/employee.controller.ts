@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import EmployeeService from "../service/employee.service";
 import HttpException from "../exceptions/http.exceptions";
-import { CreateEmployeeDto, EmployeeResposneDto, LoginDto, UpdateEmployeeDto } from "../dto/employee.dto";
+import { CreateEmployeeDto, EmployeeResposneDto, LoginDto, PasswordResetDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import { authorize } from "../middleware/authorize.middleware";
 import { RequestWithUser } from "../utils/requestWithUser";
 import { Role } from "../utils/role.enum";
@@ -13,6 +13,9 @@ class EmployeeController {
     public router: Router;
     constructor(private employeeService: EmployeeService) {
         this.router = Router();
+
+        this.router.get("/profile", authorize(), this.getCurrentEmployee);
+        this.router.post("/reset-password", authorize(), validationMiddleware(PasswordResetDto), this.resetPassword);
         this.router.get("/", authorize([Role.HR]), this.getAllEmployees);
         this.router.get("/:id", this.getEmployee);
         this.router.post("/", authorize([Role.HR]), validationMiddleware(CreateEmployeeDto), this.createEmployee);
@@ -22,6 +25,18 @@ class EmployeeController {
         //authentication
         this.router.post("/login", validationMiddleware(LoginDto), this.login);
     }
+
+    public getCurrentEmployee = asyncHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
+        const employee = await this.employeeService.getMe(req.name, req.email);
+        res.status(200).json(reponseHandler("success", "Employee found", new EmployeeResposneDto(employee)));
+    });
+
+    public resetPassword = asyncHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
+        const { currentPassword, newPassword } = req.body;
+        const employee = await this.employeeService.getMe(req.name, req.email);
+        await this.employeeService.resetPassword(employee, currentPassword, newPassword);
+        res.status(200).json(reponseHandler("success", "Password reset"));
+    });
 
     public login = async (req: Request, res: Response, next: NextFunction) => {
         try {

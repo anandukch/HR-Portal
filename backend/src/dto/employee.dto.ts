@@ -97,6 +97,16 @@ export class LoginDto {
     password: string;
 }
 
+export class PasswordResetDto {
+    @IsNotEmpty()
+    @IsString()
+    currentPassword: string;
+
+    @IsNotEmpty()
+    @IsString()
+    newPassword: string;
+}
+
 export class EmployeeResposneDto {
     password: string;
 
