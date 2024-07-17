@@ -8,6 +8,7 @@ import { EditEmployee } from "./pages/EditEmployee";
 import { EmployeeDetail } from "./pages/EmployeeDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import { Profile } from "./pages/Profile";
 
 const App = () => {
     const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const App = () => {
                 {
                     path: ":id",
                     element: <EmployeeDetail />,
+                },
+                {
+                    path: "profile",
+                    element: <Profile />,
                 },
             ],
         },

@@ -37,8 +37,18 @@ export const employeeApi = apiWithTag.injectEndpoints({
             }),
             invalidatesTags: ["EMPLOYEE_LIST", "EMPLOYEE"],
         }),
+
+        getProfile: builder.query({
+            query: () => "/employees/profile",
+        }),
     }),
 });
 
-export const { useGetEmployeeListQuery, useAddEmployeeMutation, useUpdateEmployeeMutation, useGetEmployeeQuery, useDeleteEmployeeMutation } =
-    employeeApi;
+export const {
+    useGetProfileQuery,
+    useGetEmployeeListQuery,
+    useAddEmployeeMutation,
+    useUpdateEmployeeMutation,
+    useGetEmployeeQuery,
+    useDeleteEmployeeMutation,
+} = employeeApi;

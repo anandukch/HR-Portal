@@ -4,22 +4,22 @@ import { useNavigate, useParams } from "react-router-dom";
 import "../styles/employeeDetail.css";
 import { formFields } from "../utils/employees";
 import EditIcon from "../assets/pencil.png";
-import { StatusItem } from "../components/StatusItem";
-import { statusColor } from "../utils/statusColorMap";
 import { useGetEmployeeQuery } from "../api/employeeApi";
 import { useEffect, useState } from "react";
 import { Loader } from "../components/Loader";
+import { formatDate } from "../utils/date.utils";
+import { EmployeeDetailHeader } from "../components/EmployeeDetailHeader";
+import { EmployeeBox } from "../components/EmployeeDetail";
 
 export const EmployeeDetail = () => {
     const { id } = useParams();
     const [employee, setEmployee] = useState({});
     const fields = formFields;
     const navigate = useNavigate();
-    const { data,isLoading } = useGetEmployeeQuery(id);
+    const { data, isLoading } = useGetEmployeeQuery(id);
     useEffect(() => {
         if (data) {
             const resData = data.data;
-            console.log(resData);
             setEmployee({
                 id: resData.id,
                 name: resData.name,
@@ -29,11 +29,7 @@ export const EmployeeDetail = () => {
                 experience: resData.experience,
                 department: resData.department.name,
                 address: resData.address.line1,
-                joiningDate: new Date(resData.createdAt).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                }),
+                joiningDate: formatDate(resData.createdAt),
             });
         }
     }, [data]);
@@ -44,51 +40,9 @@ export const EmployeeDetail = () => {
 
     return (
         <>
-          {
-                isLoading && <Loader/>
-            }
-            <section className="list_section">
-                <h1>Employee Detail</h1>
-                <div className="list_right">
-                    <span className="create_emp_btn edit_emp_btn">
-                        <button onClick={editClickHandler}>
-                            <img src={EditIcon} alt="" />
-                        </button>
-                        <div>Edit employee</div>
-                    </span>
-                </div>
-            </section>
-            <div className="emp_detail">
-                <div className="emp_container top">
-                    {fields.slice(0, 6).map((field) => {
-                        if (field.name == "status") {
-                            return (
-                                <div key={field.name}>
-                                    <span className="title">{field.label}</span>
-                                    <StatusItem text={employee[field.name]} bgColor={statusColor[employee.status]} />
-                                </div>
-                            );
-                        }
-                        return (
-                            <div key={field.name}>
-                                <span className="title">{field.label}</span>
-                                <span className="value">{employee[field.name]}</span>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                <div className="emp_container down">
-                    {fields.slice(6, 8).map((field) => {
-                        return (
-                            <div key={field.name}>
-                                <span className="title">{field.label}</span>
-                                <span className="value">{employee[field.name]}</span>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
+            {isLoading && <Loader />}
+            <EmployeeDetailHeader text="Employee Detail" onClick={editClickHandler} icon={EditIcon} />
+            <EmployeeBox employee={employee} fields={fields} />
         </>
     );
 };

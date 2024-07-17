@@ -51,12 +51,7 @@
     margin-right: 50px;
 }
 
-.home_header{
-    position: fixed;
-    z-index: 100;
-    width: 100vw;
-    background: white;
-}
+
 
 .layout_link {
     text-decoration: none;
@@ -67,4 +62,25 @@
 .logout {
     /* position: relative; */
     margin-top: 650px;
+}
+
+.home_header{
+    position: fixed;
+    z-index: 100;
+    width: 100vw;
+    background: white;
+}
+
+.header_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+
+.home_header .profile{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
 }
