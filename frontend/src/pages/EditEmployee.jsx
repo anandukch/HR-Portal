@@ -7,12 +7,8 @@ import { useGetEmployeeQuery, useUpdateEmployeeMutation } from "../api/employeeA
 
 export const EditEmployee = () => {
     const { id } = useParams();
-    // const  { state, dispatch }=  useOutletContext()
-    // const state = useSelector((state) => state.employee);
-    // const dispatch = useDispatch();
     const [employeeData, setEmployeeData] = useState({});
     const navigate = useNavigate();
-    // const employee = state.employees.find((employee) => employee.id === id);
 
     const { data } = useGetEmployeeQuery(id);
 
@@ -27,7 +23,7 @@ export const EditEmployee = () => {
                 role: employee.role,
                 status: employee.status,
                 experience: employee.experience,
-                department: employee.employeeDepartments[0].department.name,
+                department: employee.department.name,
                 address: employee.address.line1,
                 email: employee.email,
                 age: employee.age,
@@ -43,12 +39,6 @@ export const EditEmployee = () => {
 
     const onClickHandler = (e) => {
         e.preventDefault();
-        // employeeList.forEach((employee, i) => {
-        //     if (employee.id == id) employeeList[i] = employeeData;
-        // });
-
-        // dispatch(editEmployee(employeeData));
-        // console.log(employeeData);
         const payload = {
             ...employeeData,
             address: {

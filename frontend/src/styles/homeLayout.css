@@ -1,10 +1,14 @@
 .home_layout {
-    display: flex;
+    /* display: flex; */
+    padding-top: 60px;
 }
 
 .side_bar {
+    position: fixed;
     background-color: rgb(255, 255, 255);
     /* width: 250px; */
+    /* padding-right: 200px; */
+    /* background-color: red; */
     flex: 1;
     height: 100%;
     padding: 20px 0px 20px 20px;
@@ -22,6 +26,8 @@
     height: 50px;
     display: flex;
     align-items: center;
+    padding-right: 20px;
+
     justify-content: first baseline;
 }
 
@@ -35,6 +41,7 @@
 }
 
 .main_content {
+    padding-left: 200px;
     /* width: calc(100%-250px); */
     background-color: #fafafa;
     border-left: 1px solid #ffffff00;
@@ -42,6 +49,13 @@
     margin-left: 70px;
     flex: 7.5;
     margin-right: 50px;
+}
+
+.home_header{
+    position: fixed;
+    z-index: 100;
+    width: 100vw;
+    background: white;
 }
 
 .layout_link {

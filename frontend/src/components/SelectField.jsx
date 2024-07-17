@@ -7,11 +7,9 @@ export const SelectField = ({ name, label, options, value, className, onChange }
         setSelectField(() => value);
     }, [value]);
     const changeHandler = (e) => {
-        console.log(e.target.value);
         setSelectField(e.target.value);
         onChange(e);
     };
-
     return (
         <span className={className}>
             <label htmlFor={name}>{label}</label>

@@ -26,7 +26,7 @@ export const employeeApi = apiWithTag.injectEndpoints({
                 url: `/employees/${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["EMPLOYEE_LIST","EMPLOYEE"],
+            invalidatesTags: ["EMPLOYEE_LIST"],
         }),
 
         updateEmployee: builder.mutation({
@@ -35,7 +35,7 @@ export const employeeApi = apiWithTag.injectEndpoints({
                 method: "PUT",
                 body: data,
             }),
-            invalidatesTags: ["EMPLOYEE_LIST","EMPLOYEE"],
+            invalidatesTags: ["EMPLOYEE_LIST", "EMPLOYEE"],
         }),
     }),
 });

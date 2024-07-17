@@ -8,15 +8,14 @@ import { StatusItem } from "../components/StatusItem";
 import { statusColor } from "../utils/statusColorMap";
 import { useGetEmployeeQuery } from "../api/employeeApi";
 import { useEffect, useState } from "react";
+import { Loader } from "../components/Loader";
 
 export const EmployeeDetail = () => {
     const { id } = useParams();
     const [employee, setEmployee] = useState({});
     const fields = formFields;
     const navigate = useNavigate();
-
-    const { data } = useGetEmployeeQuery(id);
-
+    const { data,isLoading } = useGetEmployeeQuery(id);
     useEffect(() => {
         if (data) {
             const resData = data.data;
@@ -28,7 +27,7 @@ export const EmployeeDetail = () => {
                 role: resData.role,
                 status: resData.status,
                 experience: resData.experience,
-                department: resData.employeeDepartments[0].department.name,
+                department: resData.department.name,
                 address: resData.address.line1,
                 joiningDate: new Date(resData.createdAt).toLocaleDateString("en-GB", {
                     day: "numeric",
@@ -45,6 +44,9 @@ export const EmployeeDetail = () => {
 
     return (
         <>
+          {
+                isLoading && <Loader/>
+            }
             <section className="list_section">
                 <h1>Employee Detail</h1>
                 <div className="list_right">

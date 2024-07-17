@@ -3,11 +3,10 @@
 import "../styles/createEmployee.css";
 import { useEffect, useState } from "react";
 import { EmployeeForm } from "../components/EmployeeForm";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { isDataEmpty } from "../utils/formCheck";
-import { useDispatch } from "react-redux";
-import { addEmployee } from "../store/employeeReducer";
 import { useAddEmployeeMutation } from "../api/employeeApi";
+import { Toast } from "../components/Toast";
 
 const initalData = {
     name: "",
@@ -25,7 +24,9 @@ export const CreateEmployee = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initalData);
 
-    const [addEmployee, { data, isSuccess }] = useAddEmployeeMutation();
+    const [showError, setShowError] = useState(false);
+
+    const [addEmployee, { data, isSuccess, isError, error }] = useAddEmployeeMutation();
 
     useEffect(() => {
         if (isSuccess) {
@@ -35,7 +36,7 @@ export const CreateEmployee = () => {
     const onClickHandler = (e) => {
         e.preventDefault();
         if (isDataEmpty(formData)) {
-            alert("Form fields empty");
+            setShowError(true);
             return;
         }
         const payload = {
@@ -60,6 +61,9 @@ export const CreateEmployee = () => {
 
     return (
         <>
+            {showError && <Toast message="Please fill all the fields" type="error" showError={setShowError} />}
+            {isError && <Toast message={error.data.errors[0].constraints[0]} type="error" showError={setShowError} />}
+
             <section className="create_section">
                 <h1>Create Employee</h1>
             </section>

@@ -1,0 +1,20 @@
+.toast {
+    position: absolute;
+    min-width: 300px;
+    border-radius: 10px;
+    height: 60px;
+    margin-left: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 1s ease;
+}
+
+.hide {
+    display: none;
+}
+
+.error {
+    color: rgb(15, 13, 13);
+    background-color: rgba(243, 26, 26, 0.5);
+}

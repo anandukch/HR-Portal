@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../api/loginApi";
+import { Toast } from "../components/Toast";
 
 // eslint-disable-next-line react/prop-types
 export const Login = () => {
@@ -22,9 +23,9 @@ export const Login = () => {
             navigate("/employees");
         }
 
-        if (isError) {
-            alert(error.data.message);
-        }
+        // if (isError) {
+        //     alert(error.data.message);
+        // }
     }, [isSuccess, data, navigate, error, isError]);
 
     const onUsernameChange = (e) => {
@@ -52,12 +53,12 @@ export const Login = () => {
 
     return (
         <main className="login_main">
+            {isError && <Toast message={error.data.message} type={"error"}/>}
             <div className="hero">
                 <div className="wrapper-hero">
                     <img src={LoginPic} alt="Login Image" className="login-image" />
                 </div>
             </div>
-
             <div className="login">
                 <form action="">
                     <img src={KvLogo} alt="Logo" className="logo" />

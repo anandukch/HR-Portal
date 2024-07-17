@@ -8,6 +8,7 @@ import { DeletePopUp } from "../components/DeletePopUp";
 import { useDispatch, useSelector } from "react-redux";
 import { addFilter } from "../store/employeeReducer";
 import { useDeleteEmployeeMutation, useGetEmployeeListQuery } from "../api/employeeApi";
+import { Loader } from "../components/Loader";
 
 export const EmployeeList = () => {
     const state = useSelector((state) => state.employee);
@@ -20,7 +21,7 @@ export const EmployeeList = () => {
 
     const [deleteEmployee] = useDeleteEmployeeMutation();
 
-    const { data = [], isSuccess } = useGetEmployeeListQuery();
+    const { data = [], isSuccess,isLoading } = useGetEmployeeListQuery();
 
     useEffect(() => {
         if (isSuccess) {
@@ -73,6 +74,10 @@ export const EmployeeList = () => {
                     onSubmit={() => deleteHandler(selectedEmpId)}
                 />
             )}
+
+            {
+                isLoading && <Loader/>
+            }
             <section className="list_section">
                 <h1>Employee List</h1>
                 <div className="list_right">
