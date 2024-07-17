@@ -17,18 +17,16 @@ class EmployeeService {
         private employeeRespository: EmployeeRepository,
         private departmentService: DepartmentService,
         private employeeDepartmentService: EmployeeDepartmentService
-    ) {
-        // this.employeeDepartmentService = new EmployeeDepartmentService(
-        //     new EmployeeDepartmentRepository(dataSource.getRepository(EmployeeDepartment))
-        // );
-    }
+    ) {}
 
     getAllEmployees = async (): Promise<Employee[]> => {
         return this.employeeRespository.find();
     };
 
-    getEmployeeById = async (id: number): Promise<Employee | null> => {
-        return this.employeeRespository.findOneBy({ id });
+    getEmployeeById = async (id: number): Promise<any> => {
+        const employee = await this.employeeRespository.findOneBy({ id });
+        // const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee_id: id, endDate: null });
+        return employee;
     };
 
     createEmployee = async (employee: CreateEmployeeDto): Promise<Employee> => {
@@ -52,11 +50,13 @@ class EmployeeService {
         if (!department) {
             throw new HttpException(404, `No department found with name : ${departmentName}`);
         }
+
+        newEmployee.department = department;
         await this.employeeRespository.save(newEmployee);
-        const employeeDepartment = new EmployeeDepartment();
-        employeeDepartment.department = department;
-        employeeDepartment.employee = newEmployee;
-        await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
+        // const employeeDepartment = new EmployeeDepartment();
+        // employeeDepartment.department = department;
+        // employeeDepartment.employee = newEmployee;
+        // await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
         return newEmployee;
     };
 
@@ -65,39 +65,41 @@ class EmployeeService {
         if (!employeeToUpdate) {
             throw new HttpException(404, `No employee found with id :${id}`);
         }
-        console.log(employee);
-        
+
         employeeToUpdate.name = employee.name;
         employeeToUpdate.email = employee.email;
         employeeToUpdate.age = employee.age;
         employeeToUpdate.role = employee.role;
         employeeToUpdate.status = employee.status;
         employeeToUpdate.experience = employee.experience;
+        employeeToUpdate.department = await this.departmentService.getDepartmentByName(employee.departmentName);
         if (employee.address) {
             employeeToUpdate.address.line1 = employee.address.line1;
             employeeToUpdate.address.pincode = employee.address.pincode;
         }
         await this.employeeRespository.save(employeeToUpdate);
-        if (employee.departmentName) {
-            const department = await this.departmentService.getDepartmentByName(employee.departmentName);
-            if (!department) {
-                throw new HttpException(404, `No department found with id :${employee.departmentName}`);
-            }
-            const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee_id: id });
 
-            if (employeeDepartment.department_id != department.id) {
-                // throw new HttpException(400, `Employee is already assigned to this department`);
-                // updating the end date of the current employee department
-                employeeDepartment.endDate = new Date();
-                await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
+        // if (employee.departmentName) {
+        //     const department = await this.departmentService.getDepartmentByName(employee.departmentName);
+        //     if (!department) {
+        //         throw new HttpException(404, `No department found with id :${employee.departmentName}`);
+        //     }
+        //     const employeeDepartment = await this.employeeDepartmentService.findEmployeeDepartment({ employee_id: id });
+        //     // console.log(employeeDepartment.department_id, department.id);
 
-                // creating new employee department
-                const newEmployeeDepartment = new EmployeeDepartment();
-                newEmployeeDepartment.department = department;
-                newEmployeeDepartment.employee = employeeToUpdate;
-                await this.employeeDepartmentService.saveEmployeeDepartment(newEmployeeDepartment);
-            }
-        }
+        //     if (employeeDepartment.department_id != department.id) {
+        //         // throw new HttpException(400, `Employee is already assigned to this department`);
+        //         // updating the end date of the current employee department
+        //         employeeDepartment.endDate = new Date();
+        //         await this.employeeDepartmentService.saveEmployeeDepartment(employeeDepartment);
+
+        //         // creating new employee department
+        //         const newEmployeeDepartment = new EmployeeDepartment();
+        //         newEmployeeDepartment.department = department;
+        //         newEmployeeDepartment.employee = employeeToUpdate;
+        //         await this.employeeDepartmentService.saveEmployeeDepartment(newEmployeeDepartment);
+        //     }
+        // }
         return employeeToUpdate;
     };
 

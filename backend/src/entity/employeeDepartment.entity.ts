@@ -8,8 +8,8 @@ class EmployeeDepartment extends AbstractEntity {
     @ManyToOne(() => Employee, (employee) => employee.employeeDepartments)
     employee: Employee;
 
-    @ManyToOne(() => Department, (department) => department.employeeDepartments)
-    department: Department;
+    // @ManyToOne(() => Department, (department) => department.employeeDepartments)
+    // department: Department;
 
     @Column({ nullable: true })
     endDate: Date;

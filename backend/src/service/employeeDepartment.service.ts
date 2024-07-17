@@ -13,6 +13,7 @@ class EmployeeDepartmentService {
     };
 
     findEmployeeDepartment = async (filter: Partial<EmployeeDepartment>): Promise<EmployeeDepartment> => {
+        
         return this.repository.findOneBy(filter);
     };
 }

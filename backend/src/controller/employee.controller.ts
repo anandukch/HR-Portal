@@ -36,7 +36,6 @@ class EmployeeController {
     public getAllEmployees = asyncHandler(async (_: Request, res: Response, next: NextFunction) => {
         const employees = await this.employeeService.getAllEmployees();
         if (employees.length == 0) throw new HttpException(404, "No employees found");
-
         res.status(200).send(
             reponseHandler(
                 "success",

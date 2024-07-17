@@ -20,7 +20,7 @@ class EmployeeDepartmentRepository {
             where: {
                 employee_id: filter.employee_id,
             },
-            relations: ["employee", "department"],
+            relations: ["department"],
         });
         return response;
     };
