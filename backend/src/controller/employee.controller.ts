@@ -15,7 +15,7 @@ class EmployeeController {
         this.router = Router();
 
         this.router.get("/profile", authorize(), this.getCurrentEmployee);
-        this.router.post("/reset-password", authorize(), validationMiddleware(PasswordResetDto), this.resetPassword);
+        this.router.patch("/reset-password", authorize(), validationMiddleware(PasswordResetDto), this.resetPassword);
         this.router.get("/", authorize([Role.HR]), this.getAllEmployees);
         this.router.get("/:id", this.getEmployee);
         this.router.post("/", authorize([Role.HR]), validationMiddleware(CreateEmployeeDto), this.createEmployee);
@@ -33,9 +33,13 @@ class EmployeeController {
 
     public resetPassword = asyncHandler(async (req: RequestWithUser, res: Response, next: NextFunction) => {
         const { currentPassword, newPassword } = req.body;
+        console.log(req.name, req.email);
+        
         const employee = await this.employeeService.getMe(req.name, req.email);
+        console.log(employee);
+        
         await this.employeeService.resetPassword(employee, currentPassword, newPassword);
-        res.status(200).json(reponseHandler("success", "Password reset"));
+        res.status(200).json(reponseHandler("success", "Password reset successfull"));
     });
 
     public login = async (req: Request, res: Response, next: NextFunction) => {

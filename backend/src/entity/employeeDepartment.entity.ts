@@ -3,6 +3,8 @@ import AbstractEntity from "./abstract.entity";
 import Employee from "./employee.entity";
 import Department from "./department.entity";
 
+
+// not being used
 @Entity()
 class EmployeeDepartment extends AbstractEntity {
     // @ManyToOne(() => Employee, (employee) => employee.employeeDepartments)

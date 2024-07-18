@@ -9,8 +9,8 @@ class DepartmentService {
         return this.departmentRepository.find();
     };
 
-    getDepartmentById = async (id: number) => {
-        return this.departmentRepository.findOneBy({ id });
+    getDepartmentById = async (id: number, relations?: {}) => {
+        return this.departmentRepository.findOneBy({ id }, relations);
     };
     getDepartmentByName = async (name: string) => {
         return this.departmentRepository.findOneBy({ name });
@@ -37,25 +37,15 @@ class DepartmentService {
     };
 
     deleteDepartment = async (id: number) => {
-        const department = await this.getDepartmentById(id);
+        const department = await this.getDepartmentById(id, { relations: ["employee"] });
         if (!department) {
             throw new HttpException(404, `No department found with id :${id}`);
         }
-        // const departmentEmployees = await this.getDepartmentEmployees(id);
-        // if (departmentEmployees.length > 0) {
-        //     throw new HttpException(400, `Department with id :${id} has employees`);
-        // }
-
+        if (department.employee.length > 0) {
+            throw new HttpException(400, `Department with id :${id} has employees`);
+        }
         return this.departmentRepository.softDelete(department);
     };
-
-    // getDepartmentEmployees = async (id: number) => {
-    //     const department = await this.getDepartmentById(id);
-    //     if (!department) {
-    //         throw new HttpException(404, `No department found with id :${id}`);
-    //     }
-    //     return (await this.getDepartmentById(id)).employeeDepartments;
-    // };
 }
 
 export default DepartmentService;

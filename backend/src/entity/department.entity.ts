@@ -8,9 +8,6 @@ class Department extends AbstractEntity {
     @Column()
     name: string;
 
-    // @OneToMany(() => EmployeeDepartment, (employeeDepartment) => employeeDepartment.department)
-    // employeeDepartments: EmployeeDepartment[];
-
     @OneToMany(() => Employee, (employee) => employee.department)
     employee: Employee[];
 }

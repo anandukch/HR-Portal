@@ -1,7 +1,6 @@
 import { CreateEmployeeDto, UpdateEmployeeDto } from "../dto/employee.dto";
 import Address from "../entity/address.entity";
 import Employee from "../entity/employee.entity";
-import EmployeeDepartment from "../entity/employeeDepartment.entity";
 import HttpException from "../exceptions/http.exceptions";
 import EmployeeRepository from "../repository/employee.repository";
 import { JWT_SECRET, JWT_VALIDITY } from "../utils/constants";
@@ -9,7 +8,6 @@ import bcrypt from "bcryptjs";
 import { jwtPayload } from "../utils/jwtPayload.type";
 import jwt from "jsonwebtoken";
 import DepartmentService from "./department.service";
-import EmployeeDepartmentService from "./employeeDepartment.service";
 
 class EmployeeService {
     constructor(private employeeRespository: EmployeeRepository, private departmentService: DepartmentService) {}
