@@ -59,9 +59,10 @@
     cursor: pointer;
 }
 
-.logout {
+.side_bar_bottom {
     /* position: relative; */
-    margin-top: 650px;
+    margin-top: 500px
+    /* margin-bottom: 20px; */
 }
 
 .home_header{

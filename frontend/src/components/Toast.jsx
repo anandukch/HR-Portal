@@ -1,15 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import "../styles/toast.css";
-export const Toast = ({ message, type,showError }) => {
+export const Toast = ({ message, type, showError = () => {} }) => {
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
         const timer = setTimeout(() => {
             setVisible(false);
-            showError(false)
+            showError && showError(false);
         }, 3000);
-        
 
         return () => clearTimeout(timer);
     }, [showError]);
@@ -19,6 +18,8 @@ export const Toast = ({ message, type,showError }) => {
     let className = "toast";
     if (type === "error") {
         className += " error";
+    }else if (type === "success") {
+        className += " success";
     }
     return (
         <div className={className}>

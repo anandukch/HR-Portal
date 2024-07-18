@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addFilter } from "../store/employeeReducer";
 import { useDeleteEmployeeMutation, useGetEmployeeListQuery } from "../api/employeeApi";
 import { Loader } from "../components/Loader";
+import { formatDate } from "../utils/date.utils";
 
 export const EmployeeList = () => {
     const state = useSelector((state) => state.employee);
@@ -21,19 +22,14 @@ export const EmployeeList = () => {
 
     const [deleteEmployee] = useDeleteEmployeeMutation();
 
-    const { data = [], isSuccess,isLoading } = useGetEmployeeListQuery();
+    const { data = [], isSuccess, isLoading } = useGetEmployeeListQuery();
 
     useEffect(() => {
         if (isSuccess) {
             const employees = data.data.map((employee) => ({
                 ...employee,
-                joiningDate: new Date(employee.createdAt).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                }),
+                joiningDate: formatDate(employee.createdAt),
             }));
-
             setList(employees);
             setEmployees(employees);
         }
@@ -62,22 +58,9 @@ export const EmployeeList = () => {
         navigate(`/employees/${id}`);
     };
 
-    useEffect(() => {}, []);
-
     return (
         <>
-            {showDelete && (
-                <DeletePopUp
-                    title={"Are you sure?"}
-                    description={"Do you want to delete employee?"}
-                    onCancel={() => setShowDelete(false)}
-                    onSubmit={() => deleteHandler(selectedEmpId)}
-                />
-            )}
-
-            {
-                isLoading && <Loader/>
-            }
+            {isLoading && <Loader />}
             <section className="list_section">
                 <h1>Employee List</h1>
                 <div className="list_right">
@@ -124,6 +107,15 @@ export const EmployeeList = () => {
                     );
                 })}
             </section>
+
+            {showDelete && (
+                <DeletePopUp
+                    title={"Are you sure?"}
+                    description={"Do you want to delete employee?"}
+                    onCancel={() => setShowDelete(false)}
+                    onSubmit={() => deleteHandler(selectedEmpId)}
+                />
+            )}
         </>
     );
 };

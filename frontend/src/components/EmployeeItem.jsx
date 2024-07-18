@@ -3,6 +3,7 @@ import { StatusItem } from "./StatusItem";
 import DeleteIcon from "../assets/delete.png";
 import PencilIcon from "../assets/pencil.png";
 import { useNavigate } from "react-router-dom";
+import { statusColor } from "../utils/statusColorMap";
 
 // eslint-disable-next-line react/prop-types
 export const EmployeeItem = ({ employee, deleteHandler, clickHandler }) => {
@@ -18,13 +19,9 @@ export const EmployeeItem = ({ employee, deleteHandler, clickHandler }) => {
             <p>{id}</p>
             <p>{joiningDate}</p>
             <p>{role}</p>
-            {status === "Active" ? (
-                <StatusItem text={status} bgColor="#a4e984" />
-            ) : status === "Probation" ? (
-                <StatusItem text={status} bgColor="rgb(255, 191, 0)" />
-            ) : (
-                <StatusItem text={status} bgColor="#d85757" />
-            )}
+
+            <StatusItem text={status} bgColor={statusColor[status]} />
+
             <p>{experience} years</p>
             <div className="class_action">
                 <img

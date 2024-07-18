@@ -4,7 +4,7 @@ import Logout from "../assets/logout.png";
 
 import "../styles/createEmployee.css";
 import { NavItem } from "./NavItem";
-const sideBarItems = [
+const sideBarTopItems = [
     {
         id: 1,
         text: "Employee List",
@@ -17,6 +17,27 @@ const sideBarItems = [
         icon: IconSvg,
         to: "/employees/create",
     },
+    {
+        id: 3,
+        text: "Create Department",
+        icon: IconSvg,
+        to: "/departments/create",
+    },
+];
+
+const sideBarBottomItems = [
+    {
+        id: 4,
+        text: "Profile",
+        icon: IconSvg,
+        to: "/employees/profile",
+    },
+    {
+        id: 5,
+        text: "Logout",
+        icon: Logout,
+        to: "/",
+    },
 ];
 
 export const SideBar = () => {
@@ -27,16 +48,16 @@ export const SideBar = () => {
     };
     return (
         <aside className="side_bar">
-            {sideBarItems.map((item) => {
+            {sideBarTopItems.map((item) => {
                 // eslint-disable-next-line react/jsx-key
                 return <NavItem key={item.id} icon={item.icon} text={item.text} to={item.to} />;
             })}
 
-            <div className="layout_link logout" onClick={logoutHandler}>
-                <nav>
-                    <img src={Logout} alt="logout" />
-                    <p>Logout</p>
-                </nav>
+            <div className="side_bar_bottom">
+                {sideBarBottomItems.map((item) => {
+                    // eslint-disable-next-line react/jsx-key
+                    return <NavItem key={item.id} to={item.to} icon={item.icon} text={item.text} onClick={item.text === "Logout" && logoutHandler} />;
+                })}
             </div>
         </aside>
     );

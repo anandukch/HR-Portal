@@ -76,41 +76,39 @@ export const EmployeeForm = ({ formData, formChangeHandler, onClickHandler, edit
     };
     return (
         <>
-            {isSuccess && (
-                <form action="">
-                    <div className="form_item">
-                        {fields.map((field) => {
-                            return field.options ? (
-                                <SelectField
-                                    key={field.name}
-                                    label={field.label}
-                                    options={field.options}
-                                    className="create_emp_span"
-                                    name={field.name}
-                                    onChange={formChangeHandler}
-                                    value={formData[field.name]}
-                                />
-                            ) : (
-                                <TextField
-                                    key={field.name}
-                                    value={formData[field.name]}
-                                    name={field.name}
-                                    onChange={formChangeHandler}
-                                    label={field.label}
-                                    type={field.type}
-                                    className="create_emp_span"
-                                    disabled={field.disabled}
-                                />
-                            );
-                        })}
-                    </div>
+            <form action="">
+                <div className="form_item">
+                    {fields.map((field) => {
+                        return field.options ? (
+                            <SelectField
+                                key={field.name}
+                                label={field.label}
+                                options={field.options}
+                                className="create_emp_span"
+                                name={field.name}
+                                onChange={formChangeHandler}
+                                value={formData[field.name]}
+                            />
+                        ) : (
+                            <TextField
+                                key={field.name}
+                                value={formData[field.name]}
+                                name={field.name}
+                                onChange={formChangeHandler}
+                                label={field.label}
+                                type={field.type}
+                                className="create_emp_span"
+                                disabled={field.disabled}
+                            />
+                        );
+                    })}
+                </div>
 
-                    <div className="btn_group">
-                        <Button text="Confirm" className="btn_confirm" onClickHandler={onClickHandler} />
-                        <Button text="Cancel" className="btn_cancel" onClickHandler={onCancel} />
-                    </div>
-                </form>
-            )}
+                <div className="btn_group">
+                    <Button text="Confirm" className="btn_confirm" onClickHandler={onClickHandler} />
+                    <Button text="Cancel" className="btn_cancel" onClickHandler={onCancel} />
+                </div>
+            </form>
         </>
     );
 };

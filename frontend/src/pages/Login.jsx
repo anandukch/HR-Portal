@@ -23,9 +23,6 @@ export const Login = () => {
             navigate("/employees");
         }
 
-        // if (isError) {
-        //     alert(error.data.message);
-        // }
     }, [isSuccess, data, navigate, error, isError]);
 
     const onUsernameChange = (e) => {

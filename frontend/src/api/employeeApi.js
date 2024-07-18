@@ -41,6 +41,14 @@ export const employeeApi = apiWithTag.injectEndpoints({
         getProfile: builder.query({
             query: () => "/employees/profile",
         }),
+
+        resetPassword: builder.mutation({
+            query: (data) => ({
+                url: "/employees/reset-password",
+                method: "PATCH",
+                body: data,
+            }),
+        }),
     }),
 });
 
@@ -51,4 +59,5 @@ export const {
     useUpdateEmployeeMutation,
     useGetEmployeeQuery,
     useDeleteEmployeeMutation,
+    useResetPasswordMutation
 } = employeeApi;

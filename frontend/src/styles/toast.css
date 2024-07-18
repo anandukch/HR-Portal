@@ -18,3 +18,7 @@
     color: rgb(15, 13, 13);
     background-color: rgba(243, 26, 26, 0.5);
 }
+.success {
+    color: rgb(15, 13, 13);
+    background-color: rgba(26, 243, 26, 0.5);
+}
