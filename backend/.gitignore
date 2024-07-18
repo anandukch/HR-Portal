@@ -1,6 +1,7 @@
 node_modules
 dist
-*.env
+.env
+local.env
 postgres
 docker-compose2.yml
 docker.env

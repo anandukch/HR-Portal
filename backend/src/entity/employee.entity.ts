@@ -2,7 +2,6 @@ import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import AbstractEntity from "./abstract.entity";
 import Address from "./address.entity";
 import { Role } from "../utils/role.enum";
-import EmployeeDepartment from "./employeeDepartment.entity";
 import Department from "./department.entity";
 
 @Entity()
